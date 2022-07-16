@@ -2,7 +2,7 @@ import express, {Request, Response} from 'express'
 import bodyParser from "body-parser";
 
 const app = express()
-const port = process.env.PORT || 5000
+const port = process.env.PORT || 3000
 let bloggers = [
     {id: 1, name: 'study', youtubeUrl: 'backend'},
     {id: 2, name: 'work', youtubeUrl: 'node'},
@@ -15,7 +15,7 @@ app.use(parserMiddleware)
 
 app.get('/', (req:Request, res:Response) => {
 
-    res.send("Hello! Please add path /videos, if you want to watch videos")
+    res.send("Hello!")
 })
 
 app.get('/bloggers', (req:Request, res:Response) => {
