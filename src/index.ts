@@ -58,40 +58,40 @@ app.post('/bloggers', (req:Request, res:Response) => {
          res.send(404)
      }
 })
-// app.put('/videos/:id', (req:Request, res:Response) => {
-//     let title = req.body.title
-//     if (!title || typeof title !== 'string' || !title.trim() || title.length > 40){
-//         res.status(400).send({
-//             errorsMessages: [
-//                 {
-//                     message: "Incorrect title",
-//                     field: "title"
-//                 }
-//             ]
-//         })
-//         return
-//     }
-//
-//     let video = videos.find(v => v.id === +req.params.id)
-//     if (video) {
-//         video.title = req.body.title
-//         res.send(204)
-//     } else {
-//         res.send(404)
-//     }
-//
-// })
-// app.delete('/videos/:id', (req:Request, res:Response) => {
-//     const id = +req.params.id
-//     const newVideos = videos.filter(v => v.id !== id)
-//     if (newVideos.length < videos.length) {
-//         videos = newVideos
-//         res.send(204)
-//     } else {
-//         res.send(404)
-//     }
-// })
-//
+ app.put('/bloggers/:id', (req:Request, res:Response) => {
+     let name = req.body.name && req.body.youtubeUrl
+     if (!name || typeof name !== 'string' || !name.trim() || name.length > 40){
+         res.status(400).send({
+             errorsMessages: [
+                 {
+                     message: "Incorrect title",
+                    field: "title"
+                 }
+             ]
+        })
+         return
+    }
+     let blogger = bloggers.find(b => b.id === +req.params.id)
+     if (blogger) {
+         blogger.name = req.body.name;
+         blogger.youtubeUrl = req.body.youtubeUrl;
+         res.send(204)
+     } else {
+         res.send(404)
+     }
+
+ })
+ app.delete('/bloggers/:id', (req:Request, res:Response) => {
+     const id = +req.params.id
+     const newBloggers = bloggers.filter(b => b.id !== id)
+     if (newBloggers.length < bloggers.length) {
+         bloggers = newBloggers
+         res.send(204)
+     } else {
+         res.send(404)
+     }
+ })
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
