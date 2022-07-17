@@ -54,22 +54,22 @@ app.post('/bloggers', (req:Request, res:Response) => {
     let youtubeUrl = req.body.youtubeUrl
     let pattern = /^https:\/\/([a-zA-Z\d_-]+\.)+[a-zA-Z\d_-]+(\/[a-zA-Z\d_-]+)*\/?$/
 
-    if (!youtubeUrl ||  typeof youtubeUrl !== 'string' ||
-         !youtubeUrl.trim()||  youtubeUrl.length > 100 || !pattern){
+    if (!name || typeof name !== 'string' || !name.trim() ||  name.length > 15 ){
          res.status(400).send(
              {
                  errorsMessages: [
                      { message: "error",
-                       field: "youtubeUrl"
+                       field: "name"
                      }
                  ]})
          return
-     } else if (!name || typeof name !== 'string' || !name.trim() ||  name.length > 15 ){
+     } else if (!youtubeUrl ||  typeof youtubeUrl !== 'string' ||
+        !youtubeUrl.trim()||  youtubeUrl.length > 100 || !pattern){
         res.status(400).send(
             {
                 errorsMessages: [
                     { message: "error",
-                        field: "name" }
+                        field: "youtubeUrl" }
                 ]})
         return
     }
