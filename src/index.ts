@@ -56,14 +56,15 @@ app.post('/bloggers', (req:Request, res:Response) => {
 
     if (!name || !youtubeUrl || typeof name !== 'string' || typeof youtubeUrl !== 'string' ||
          !name.trim() || !youtubeUrl.trim()|| name.length > 15 || youtubeUrl.length > 100 || !pattern){
-         res.status(400).send({
-             errorsMessages: [
+         res.status(400).send(
              {
-                 message: "Incorrect title",
-                 field: "title"
-             }
-         ]
-     })
+                 errorsMessages: [
+                     { message: "error",
+                       field: "please send correct string"
+                     },
+                     { message: "error",
+                       field: "please send correct string" }
+                 ]})
          return
      }
     const newBloggers = {
@@ -89,14 +90,15 @@ app.put('/bloggers/:id', (req:Request, res:Response) => {
 
     if (!name || !youtubeUrl || typeof name !== 'string' || typeof youtubeUrl !== 'string' ||
         !name.trim() || !youtubeUrl.trim()|| name.length > 15 || youtubeUrl.length > 100 || !pattern){
-         res.status(400).send({
-             errorsMessages: [
-                 {
-                     message: "Incorrect title",
-                    field: "title"
-                 }
-             ]
-        })
+        res.status(400).send(
+            {
+                errorsMessages: [
+                    { message: "error",
+                        field: "please send correct string"
+                    },
+                    { message: "error",
+                        field: "please send correct string" }
+                ]})
          return
     }
      let blogger = bloggers.find(b => b.id === +req.params.id)
