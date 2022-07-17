@@ -62,7 +62,6 @@ app.post('/bloggers', (req:Request, res:Response) => {
                        field: "name"
                      }
                  ]})
-         return
      } else if (!youtubeUrl ||  typeof youtubeUrl !== 'string' ||
         !youtubeUrl.trim()||  youtubeUrl.length > 100 || !pattern){
         res.status(400).send(
