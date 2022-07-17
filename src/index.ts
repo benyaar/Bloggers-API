@@ -117,13 +117,7 @@ app.post('/bloggers', (req:Request, res:Response) => {
  })
 
 app.get('/posts', (req:Request, res:Response) => {
-    const postTitle =  req.query.title
-    if(postTitle){
-        let searchString = postTitle.toString()
-        res.send(posts.filter(p=> p.postTitle.indexOf(searchString) > -1))
-    } else {
         res.send(posts)
-    }
 })
 app.post('/posts', (req:Request, res:Response) => {
     let name = req.body.title && req.body.shortDescription && req.body.content && req.body.content
