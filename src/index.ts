@@ -54,15 +54,29 @@ app.post('/bloggers', (req:Request, res:Response) => {
     let youtubeUrl = req.body.youtubeUrl
     let pattern = /^https:\/\/([a-zA-Z\d_-]+\.)+[a-zA-Z\d_-]+(\/[a-zA-Z\d_-]+)*\/?$/
 
-    if (!name || typeof name !== 'string' || !name.trim() ||  name.length > 15 ){
+    if (!name && !youtubeUrl || typeof name !== 'string' && typeof youtubeUrl !== 'string'
+        || !name.trim() &&  !youtubeUrl.trim() ||  name.length > 15 && youtubeUrl.length > 100 || !pattern){
          res.status(400).send(
              {
                  errorsMessages: [
                      { message: "error",
-                       field: "name"
-                     }
+                       field: "youtubeUrl"
+                     },
+                     { message: "error",
+                         field: "name"
+                     },
+                     
                  ]})
-     } else if (!youtubeUrl ||  typeof youtubeUrl !== 'string' ||
+     } else if (!name || !name.trim() ||  name.length > 15 ){
+        res.status(400).send(
+            {
+                errorsMessages: [
+                    { message: "error",
+                        field: "name"
+                    }
+                ]})
+
+    } else if (!youtubeUrl ||  typeof youtubeUrl !== 'string' ||
         !youtubeUrl.trim()||  youtubeUrl.length > 100 || !pattern){
         res.status(400).send(
             {
@@ -70,7 +84,7 @@ app.post('/bloggers', (req:Request, res:Response) => {
                     { message: "error",
                         field: "youtubeUrl" }
                 ]})
-        return
+return
     }
     const newBloggers = {
         id: +(new Date()),
