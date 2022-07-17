@@ -29,7 +29,7 @@ app.get('/bloggers', (req:Request, res:Response) => {
 })
 app.post('/bloggers', (req:Request, res:Response) => {
      let name = req.body.name && req.body.youtubeUrl
-     
+
      if (!name || typeof name !== 'string' || !name.trim() || name.length > 40){
          res.status(400).send({
              errorsMessages: [
@@ -41,7 +41,6 @@ app.post('/bloggers', (req:Request, res:Response) => {
      })
          return
      }
-
     const newBloggers = {
         id: +(new Date()),
         name: req.body.name,
@@ -50,16 +49,15 @@ app.post('/bloggers', (req:Request, res:Response) => {
     bloggers.push(newBloggers)
     res.status(201).send(newBloggers)
  })
-//
-// app.get('/videos/:id', (req:Request, res:Response) => {
-//     let video = videos.find(v => v.id === +req.params.id)
-//     if (video) {
-//         res.send(video)
-//     } else {
-//         res.send(404)
-//     }
-//
-// })
+
+ app.get('/bloggers/:id', (req:Request, res:Response) => {
+   let blogger = bloggers.find(b => b.id === +req.params.id)
+     if (blogger) {
+         res.send(blogger)
+     } else {
+         res.send(404)
+     }
+})
 // app.put('/videos/:id', (req:Request, res:Response) => {
 //     let title = req.body.title
 //     if (!title || typeof title !== 'string' || !title.trim() || title.length > 40){
