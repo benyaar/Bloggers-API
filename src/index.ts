@@ -20,7 +20,6 @@ let bloggers = [
      youtubeUrl: 'html'
     },
 ]
-
 let posts = [
     {
         id: 1,
@@ -41,7 +40,6 @@ app.get('/', (req:Request, res:Response) => {
 
     res.send("Hello!")
 })
-
 app.get('/bloggers', (req:Request, res:Response) => {
    const name =  req.query.name
    if(name){
@@ -52,9 +50,12 @@ app.get('/bloggers', (req:Request, res:Response) => {
    }
 })
 app.post('/bloggers', (req:Request, res:Response) => {
-     let name = req.body.name && req.body.youtubeUrl
+    let name = req.body.name
+    let youtubeUrl = req.body.youtubeUrl
+    let pattern = /^https:\/\/([a-zA-Z\d_-]+\.)+[a-zA-Z\d_-]+(\/[a-zA-Z\d_-]+)*\/?$/
 
-     if (!name || typeof name !== 'string' || !name.trim() || name.length > 40){
+    if (!name || !youtubeUrl || typeof name !== 'string' || typeof youtubeUrl !== 'string' ||
+         !name.trim() || !youtubeUrl.trim()|| name.length > 15 || youtubeUrl.length > 100 || !pattern){
          res.status(400).send({
              errorsMessages: [
              {
@@ -73,8 +74,7 @@ app.post('/bloggers', (req:Request, res:Response) => {
     bloggers.push(newBloggers)
     res.status(201).send(newBloggers)
  })
-
- app.get('/bloggers/:id', (req:Request, res:Response) => {
+app.get('/bloggers/:id', (req:Request, res:Response) => {
    let blogger = bloggers.find(b => b.id === +req.params.id)
      if (blogger) {
          res.send(blogger)
@@ -82,9 +82,13 @@ app.post('/bloggers', (req:Request, res:Response) => {
          res.send(404)
      }
 })
- app.put('/bloggers/:id', (req:Request, res:Response) => {
-     let name = req.body.name && req.body.youtubeUrl
-     if (!name || typeof name !== 'string' || !name.trim() || name.length > 40){
+app.put('/bloggers/:id', (req:Request, res:Response) => {
+    let name = req.body.name
+    let youtubeUrl = req.body.youtubeUrl
+    let pattern = /^https:\/\/([a-zA-Z\d_-]+\.)+[a-zA-Z\d_-]+(\/[a-zA-Z\d_-]+)*\/?$/
+
+    if (!name || !youtubeUrl || typeof name !== 'string' || typeof youtubeUrl !== 'string' ||
+        !name.trim() || !youtubeUrl.trim()|| name.length > 15 || youtubeUrl.length > 100 || !pattern){
          res.status(400).send({
              errorsMessages: [
                  {
@@ -105,7 +109,7 @@ app.post('/bloggers', (req:Request, res:Response) => {
      }
 
  })
- app.delete('/bloggers/:id', (req:Request, res:Response) => {
+app.delete('/bloggers/:id', (req:Request, res:Response) => {
      const id = +req.params.id
      const newBloggers = bloggers.filter(b => b.id !== id)
      if (newBloggers.length < bloggers.length) {
@@ -115,7 +119,6 @@ app.post('/bloggers', (req:Request, res:Response) => {
          res.send(404)
      }
  })
-
 app.get('/posts', (req:Request, res:Response) => {
         res.send(posts)
 })
@@ -144,7 +147,6 @@ app.post('/posts', (req:Request, res:Response) => {
     posts.push(newPosts)
     res.status(201).send(newPosts)
 })
-
 app.get('/posts/:id', (req:Request, res:Response) => {
     let post = posts.find(p => p.id === +req.params.id)
     if (post) {
@@ -153,7 +155,6 @@ app.get('/posts/:id', (req:Request, res:Response) => {
         res.send(404)
     }
 })
-
 app.put('/posts/:id', (req:Request, res:Response) => {
     let name = req.body.title && req.body.shortDescription && req.body.content && req.body.content
 
@@ -189,18 +190,6 @@ app.delete('/posts/:id', (req:Request, res:Response) => {
         res.send(404)
     }
 })
-
-
-
-
-
-
-
-
-
-
-
-
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
