@@ -4,10 +4,34 @@ import bodyParser from "body-parser";
 const app = express()
 const port = process.env.PORT || 3000
 let bloggers = [
-    {id: 1, name: 'study', youtubeUrl: 'backend'},
-    {id: 2, name: 'work', youtubeUrl: 'node'},
-    {id: 3, name: 'relax', youtubeUrl: 'html'},
+    {
+     id: 1,
+     name: 'study',
+     youtubeUrl: 'backend'
+    },
+    {
+     id: 2,
+     name: 'work',
+     youtubeUrl: 'node'
+    },
+    {
+     id: 3,
+     name: 'relax',
+     youtubeUrl: 'html'
+    },
 ]
+
+let posts = [
+    {
+        id: 1,
+        title: "All about JS",
+        shortDescription: "JS",
+        content: "post",
+        bloggerId: 1,
+        bloggerName: "Brendan Eich"
+    }
+]
+
 
 const parserMiddleware = bodyParser()
 app.use(parserMiddleware)
@@ -91,6 +115,98 @@ app.post('/bloggers', (req:Request, res:Response) => {
          res.send(404)
      }
  })
+
+app.get('/posts', (req:Request, res:Response) => {
+    const postTitle =  req.query.title
+    if(postTitle){
+        let searchString = postTitle.toString()
+        res.send(posts.filter(p=> p.postTitle.indexOf(searchString) > -1))
+    } else {
+        res.send(posts)
+    }
+})
+app.post('/posts', (req:Request, res:Response) => {
+    let name = req.body.title && req.body.shortDescription && req.body.content && req.body.content
+
+    if (!name || typeof name !== 'string' || !name.trim() || name.length > 40){
+        res.status(400).send({
+            errorsMessages: [
+                {
+                    message: "Incorrect title",
+                    field: "title"
+                }
+            ]
+        })
+        return
+    }
+    const newPosts = {
+        id: +(new Date()),
+        title: req.body.title,
+        shortDescription: req.body.shortDescription,
+        content: req.body.content,
+        bloggerId: req.body.bloggerId,
+        bloggerName: "Brendan Eich"
+    }
+    posts.push(newPosts)
+    res.status(201).send(newPosts)
+})
+
+app.get('/posts/:id', (req:Request, res:Response) => {
+    let post = posts.find(p => p.id === +req.params.id)
+    if (post) {
+        res.send(post)
+    } else {
+        res.send(404)
+    }
+})
+
+app.put('/posts/:id', (req:Request, res:Response) => {
+    let name = req.body.title && req.body.shortDescription && req.body.content && req.body.content
+
+    if (!name || typeof name !== 'string' || !name.trim() || name.length > 40) {
+        res.status(400).send({
+            errorsMessages: [
+                {
+                    message: "Incorrect title",
+                    field: "title"
+                }
+            ]
+        })
+        return
+    }
+    let post = posts.find(p => p.id === +req.params.id)
+    if (post) {
+        post.title = req.body.title
+        post.shortDescription = req.body.shortDescription
+        post.content = req.body.content
+        post.bloggerId = req.body.bloggerId
+        res.send(204)
+    } else {
+        res.send(404)
+    }
+})
+app.delete('/posts/:id', (req:Request, res:Response) => {
+    const id = +req.params.id
+    const newPosts = posts.filter(p => p.id !== id)
+    if (newPosts.length < posts.length) {
+        posts = newPosts
+        res.send(204)
+    } else {
+        res.send(404)
+    }
+})
+
+
+
+
+
+
+
+
+
+
+
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
