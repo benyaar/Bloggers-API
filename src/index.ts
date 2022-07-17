@@ -65,27 +65,26 @@ app.post('/bloggers', (req:Request, res:Response) => {
                      { message: "error",
                          field: "name"
                      },
-                     
-                 ]})
-     } else if (!name || !name.trim() ||  name.length > 15 ){
-        res.status(400).send(
-            {
-                errorsMessages: [
-                    { message: "error",
-                        field: "name"
-                    }
-                ]})
 
-    } else if (!youtubeUrl ||  typeof youtubeUrl !== 'string' ||
-        !youtubeUrl.trim()||  youtubeUrl.length > 100 || !pattern){
+                 ]})
+
+     }  else if (!youtubeUrl ||  typeof youtubeUrl !== 'string' ||
+        !youtubeUrl.trim()||  youtubeUrl.length > 100 || !pattern) {
         res.status(400).send(
             {
                 errorsMessages: [
-                    { message: "error",
-                        field: "youtubeUrl" }
-                ]})
-return
-    }
+                    {
+                        message: "error",
+                        field: "youtubeUrl"
+                    }
+                ]
+            })
+        return
+     }
+
+
+
+
     const newBloggers = {
         id: +(new Date()),
         name: req.body.name,
