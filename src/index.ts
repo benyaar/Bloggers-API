@@ -60,10 +60,10 @@ app.post('/bloggers', (req:Request, res:Response) => {
              {
                  errorsMessages: [
                      { message: "error",
-                       field: "please send correct string"
+                       field: "youtubeUrl"
                      },
                      { message: "error",
-                       field: "please send correct string" }
+                       field: "name" }
                  ]})
          return
      }
