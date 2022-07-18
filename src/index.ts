@@ -56,8 +56,8 @@ app.post('/bloggers',
     (req: Request, res: Response) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({
-                errorsMessage: errors.array({onlyFirstError:true}).map(e => {
+            return res.status(400).send({
+                errorsMessage: errors.array().map(e => {
                     return {
                         message: e.msg,
                         field: e.param,
