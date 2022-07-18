@@ -50,8 +50,8 @@ app.get('/bloggers', (req: Request, res: Response) => {
     }
 })
 app.post('/bloggers',
-    body('name').isLength({min:0,max:15}).not().isEmpty().trim(),
     body('youtubeUrl').matches(/^https:\/\/([a-zA-Z\d_-]+\.)+[a-zA-Z\d_-]+(\/[a-zA-Z\d_-]+)*\/?$/).isLength({max:100}),
+    body('name').isLength({min:0,max:15}).not().isEmpty().trim(),
 
     (req: Request, res: Response) => {
         const errors = validationResult(req);
