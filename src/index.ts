@@ -50,14 +50,14 @@ app.get('/bloggers', (req: Request, res: Response) => {
     }
 })
 app.post('/bloggers',
-    body('name').not().isLength({max:15}).isEmpty({ignore_whitespace: false}).withMessage("name"),
-    body('youtubeUrl').not().matches(/^https:\/\/([a-zA-Z\d_-]+\.)+[a-zA-Z\d_-]+(\/[a-zA-Z\d_-]+)*\/?$/).isLength({max:100}).isEmpty({ignore_whitespace: false}).withMessage("youtubeUrl"),
+    body('name').isLength({min:0,max:15}).not().isEmpty().trim(),
+    body('youtubeUrl').matches(/^https:\/\/([a-zA-Z\d_-]+\.)+[a-zA-Z\d_-]+(\/[a-zA-Z\d_-]+)*\/?$/).isLength({max:100}),
 
     (req: Request, res: Response) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({
-                errorsMessage: errors.array().map(e => {
+                errorsMessage: errors.array({onlyFirstError:true}).map(e => {
                     return {
                         message: e.msg,
                         field: e.param,
