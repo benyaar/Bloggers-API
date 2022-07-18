@@ -57,7 +57,7 @@ app.post('/bloggers',
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).send({
-                errorsMessage: errors.array().map(e => {
+                errorsMessages: errors.array().map(e => {
                     return {
                         message: e.msg,
                         field: e.param,
