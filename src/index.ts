@@ -78,7 +78,7 @@ app.post('/bloggers', (req: Request, res: Response) => {
         errorsMessages.push(error)
         }
 
-    if (!req.body.youtubeUrl || req.body.youtubeUrl > 100 || !pattern.test(req.body.youtubeUrl)) {
+    if (!req.body.youtubeUrl || req.body.youtubeUrl.length > 100 || !pattern.test(req.body.youtubeUrl)) {
         const error  = {
             message: "invalid youtubeUrl", field: "youtubeUrl"
         }
