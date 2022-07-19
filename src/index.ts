@@ -78,12 +78,12 @@ app.post('/bloggers', (req: Request, res: Response) => {
         errorsMessages.push(error)
         }
 
-    if (!req.body.youtubeUrl || req.body.youtubeUrl > 100 || !pattern) {
+    if (!req.body.youtubeUrl || req.body.youtubeUrl > 100 || !pattern.test(req.body.youtubeUrl)) {
         const error  = {
             message: "invalid youtubeUrl", field: "youtubeUrl"
         }
         errorsMessages.push(error)
-        
+
     }
     if (errorsMessages.length > 0) {
         res.status(400).send({"errorsMessages": errorsMessages})
@@ -108,43 +108,29 @@ app.get('/bloggers/:id', (req: Request, res: Response) => {
     }
 })
 app.put('/bloggers/:id', (req: Request, res: Response) => {
-    let name = req.body.name
-    let youtubeUrl = req.body.youtubeUrl
+    let errorsMessages: { message: string; field: string; }[] = []
     let pattern = /^https:\/\/([a-zA-Z\d_-]+\.)+[a-zA-Z\d_-]+(\/[a-zA-Z\d_-]+)*\/?$/
 
-    const errorsMessages = []
-
-    if(name.trim()) {
-        errorsMessages.push({field: 'name', message: 'invalid name'})
+    if (!req.body.name || req.body.name.length > 15 || !req.body.name.trim()) {
+        const error = {
+            message: "invalid name", field: "name"
+        }
+        errorsMessages.push(error)
     }
 
-    if(youtubeUrl) {
+    if (!req.body.youtubeUrl || req.body.youtubeUrl > 100 || !pattern.test(req.body.youtubeUrl)) {
+        const error  = {
+            message: "invalid youtubeUrl", field: "youtubeUrl"
+        }
+        errorsMessages.push(error)
 
     }
-
-    if(errorsMessages.length) {
-       return  res.status(400).send({errorsMessages})
-    }
-
-
-
-    if (!name || !youtubeUrl || typeof name !== 'string' || typeof youtubeUrl !== 'string' ||
-        !name.trim() || !youtubeUrl.trim() || name.length > 15 || youtubeUrl.length > 100 || !pattern) {
-        res.status(400).send(
-            {
-                errorsMessages: [
-                    {
-                        message: "error",
-                        field: "please send correct string"
-                    },
-                    {
-                        message: "error",
-                        field: "please send correct string"
-                    }
-                ]
-            })
+    if (errorsMessages.length > 0) {
+        res.status(400).send({"errorsMessages": errorsMessages})
         return
     }
+
+
     let blogger = bloggers.find(b => b.id === +req.params.id)
     if (blogger) {
         blogger.name = req.body.name;
