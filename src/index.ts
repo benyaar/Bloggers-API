@@ -164,7 +164,7 @@ app.post('/posts', (req: Request, res: Response) => {
         errorsMessages.push(error)
     }
 
-    if (!req.body.shortDescription || !req.body.shortDescription.trim()) {
+    if (!req.body.shortDescription || req.body.shortDescription.length > 100||!req.body.shortDescription.trim()) {
         const error  = {
             message: "invalid shortDescription", field: "shortDescription"
         }
