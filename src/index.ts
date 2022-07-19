@@ -1,6 +1,6 @@
 import express, {Request, Response} from 'express'
 import bodyParser from "body-parser";
-import {body, validationResult} from 'express-validator';
+
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -49,31 +49,56 @@ app.get('/bloggers', (req: Request, res: Response) => {
         res.send(bloggers)
     }
 })
-app.post('/bloggers',
-    body('youtubeUrl').matches(/^https:\/\/([a-zA-Z\d_-]+\.)+[a-zA-Z\d_-]+(\/[a-zA-Z\d_-]+)*\/?$/).isLength({max:100}).isEmpty(),
-    body('name').isLength({min:0,max:15}).not().isEmpty().trim(),
+app.post('/bloggers', (req: Request, res: Response) => {
+    // body('youtubeUrl').matches(/^https:\/\/([a-zA-Z\d_-]+\.)+[a-zA-Z\d_-]+(\/[a-zA-Z\d_-]+)*\/?$/).isLength({max:100}),
+    // body('name').isLength({min:0,max:15}).not().isEmpty().trim(),
+    //
+    //     (req: Request, res: Response) => {
+    //         const errors = validationResult(req);
+    //         if (!errors.isEmpty()) {
+    //             return res.status(400).send({
+    //                 errorsMessages: errors.array().map(e => {
+    //                     return {
+    //                         message: e.msg,
+    //                         field: e.param,
+    //                     }
+    //                 })
+    //             });
+    //         }
+    //
 
-    (req: Request, res: Response) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).send({
-                errorsMessages: errors.array().map(e => {
-                    return {
-                        message: e.msg,
-                        field: e.param,
-                    }
-                })
-            });
+
+    let errorsMessages: { message: string; field: string; }[] = []
+   let pattern = /^https:\/\/([a-zA-Z\d_-]+\.)+[a-zA-Z\d_-]+(\/[a-zA-Z\d_-]+)*\/?$/
+
+    if (!req.body.name || req.body.name.length > 15 || !req.body.name.trim()) {
+        const error = {
+        message: "invalid name", field: "name"
+        }
+        errorsMessages.push(error)
         }
 
-        const newBloggers = {
-            id: +(new Date()),
-            name: req.body.name,
-            youtubeUrl: req.body.youtubeUrl
+    if (!req.body.youtubeUrl || req.body.youtubeUrl > 100 || !pattern) {
+        const error  = {
+            message: "invalid youtubeUrl", field: "youtubeUrl"
         }
-        bloggers.push(newBloggers)
-        res.status(201).send(newBloggers)
-    })
+        errorsMessages.push(error)
+        
+    }
+    if (errorsMessages.length > 0) {
+        res.status(400).send({"errorsMessages": errorsMessages})
+        return
+    }
+    const newBloggers = {
+        id: +(new Date()),
+        name: req.body.name,
+        youtubeUrl: req.body.youtubeUrl
+    }
+    bloggers.push(newBloggers)
+    res.status(201).send(newBloggers)
+
+
+})
 app.get('/bloggers/:id', (req: Request, res: Response) => {
     let blogger = bloggers.find(b => b.id === +req.params.id)
     if (blogger) {
