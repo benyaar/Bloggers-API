@@ -171,8 +171,6 @@ app.post('/posts', (req: Request, res: Response) => {
         errorsMessages.push(error)
     }
 
-
-
     if (!req.body.shortDescription || req.body.shortDescription.length > 100||!req.body.shortDescription.trim()) {
         const error  = {
             message: "invalid shortDescription", field: "shortDescription"
@@ -213,17 +211,29 @@ app.put('/posts/:id', (req: Request, res: Response) => {
 
     if (!req.body.title || req.body.title.length > 30 || !req.body.title.trim()) {
         const error = {
-            message: "invalid name", field: "title"
+            message: "invalid title", field: "title"
+        }
+        errorsMessages.push(error)
+    }
+    const bloggersID = bloggers.find(b => b.id === +req.body.bloggerId)
+    if (!req.body.bloggerId || !bloggersID) {
+        const error = {
+            message: "invalid bloggerId", field: "bloggerId"
         }
         errorsMessages.push(error)
     }
 
-    if (!req.body.shortDescription || !req.body.title.trim()) {
+    if (!req.body.shortDescription || req.body.shortDescription.length > 100||!req.body.shortDescription.trim()) {
         const error  = {
-            message: "invalid youtubeUrl", field: "shortDescription"
+            message: "invalid shortDescription", field: "shortDescription"
         }
         errorsMessages.push(error)
-
+    }
+    if (!req.body.content || req.body.content.length > 1000 || !req.body.content.trim()) {
+        const error  = {
+            message: "invalid content", field: "content"
+        }
+        errorsMessages.push(error)
     }
     if (errorsMessages.length > 0) {
         res.status(400).send({"errorsMessages": errorsMessages})
