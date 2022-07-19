@@ -155,17 +155,24 @@ app.get('/posts', (req: Request, res: Response) => {
     res.send(posts)
 })
 app.post('/posts', (req: Request, res: Response) => {
-    let name = req.body.title && req.body.shortDescription && req.body.content && req.body.content
+    let errorsMessages: { message: string; field: string; }[] = []
 
-    if (!name || typeof name !== 'string' || !name.trim() || name.length > 40) {
-        res.status(400).send({
-            errorsMessages: [
-                {
-                    message: "Incorrect title",
-                    field: "title"
-                }
-            ]
-        })
+    if (!req.body.title || req.body.title.length > 30 || !req.body.title.trim()) {
+        const error = {
+            message: "invalid name", field: "title"
+        }
+        errorsMessages.push(error)
+    }
+
+    if (!req.body.shortDescription || !req.body.title.trim()) {
+        const error  = {
+            message: "invalid youtubeUrl", field: "shortDescription"
+        }
+        errorsMessages.push(error)
+
+    }
+    if (errorsMessages.length > 0) {
+        res.status(400).send({"errorsMessages": errorsMessages})
         return
     }
     const newPosts = {
@@ -188,19 +195,27 @@ app.get('/posts/:id', (req: Request, res: Response) => {
     }
 })
 app.put('/posts/:id', (req: Request, res: Response) => {
-    let name = req.body.title && req.body.shortDescription && req.body.content && req.body.content
+    let errorsMessages: { message: string; field: string; }[] = []
 
-    if (!name || typeof name !== 'string' || !name.trim() || name.length > 40) {
-        res.status(400).send({
-            errorsMessages: [
-                {
-                    message: "Incorrect title",
-                    field: "title"
-                }
-            ]
-        })
+    if (!req.body.title || req.body.title.length > 30 || !req.body.title.trim()) {
+        const error = {
+            message: "invalid name", field: "title"
+        }
+        errorsMessages.push(error)
+    }
+
+    if (!req.body.shortDescription || !req.body.title.trim()) {
+        const error  = {
+            message: "invalid youtubeUrl", field: "shortDescription"
+        }
+        errorsMessages.push(error)
+
+    }
+    if (errorsMessages.length > 0) {
+        res.status(400).send({"errorsMessages": errorsMessages})
         return
     }
+
     let post = posts.find(p => p.id === +req.params.id)
     if (post) {
         post.title = req.body.title
