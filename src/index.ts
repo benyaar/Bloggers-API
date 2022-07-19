@@ -163,6 +163,15 @@ app.post('/posts', (req: Request, res: Response) => {
         }
         errorsMessages.push(error)
     }
+    const bloggersID = bloggers.find(b => b.id === +req.body.bloggerId)
+    if (!req.body.bloggerId || !bloggersID) {
+        const error = {
+            message: "invalid bloggerId", field: "bloggerId"
+        }
+        errorsMessages.push(error)
+    }
+
+
 
     if (!req.body.shortDescription || req.body.shortDescription.length > 100||!req.body.shortDescription.trim()) {
         const error  = {
