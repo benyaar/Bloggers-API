@@ -164,13 +164,13 @@ app.post('/posts', (req: Request, res: Response) => {
         errorsMessages.push(error)
     }
 
-    if (!req.body.shortDescription || !req.body.title.trim()) {
+    if (!req.body.shortDescription || !req.body.shortDescription.trim()) {
         const error  = {
             message: "invalid shortDescription", field: "shortDescription"
         }
         errorsMessages.push(error)
     }
-    if (!req.body.content || req.body.title.content > 1000 || !req.body.content.trim()) {
+    if (!req.body.content || req.body.content.length > 1000 || !req.body.content.trim()) {
         const error  = {
             message: "invalid content", field: "content"
         }
