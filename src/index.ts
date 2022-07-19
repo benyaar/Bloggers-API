@@ -135,7 +135,7 @@ app.put('/bloggers/:id', (req: Request, res: Response) => {
     if (blogger) {
         blogger.name = req.body.name;
         blogger.youtubeUrl = req.body.youtubeUrl;
-        res.status(200).send({blogger})
+        res.status(204).send({blogger})
     } else {
         res.send(404)
     }
