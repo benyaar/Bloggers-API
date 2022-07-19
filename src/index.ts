@@ -164,12 +164,17 @@ app.post('/posts', (req: Request, res: Response) => {
         errorsMessages.push(error)
     }
 
-    if (!req.body.shortDescription || req.body.title.length > 1000 || !req.body.title.trim()) {
+    if (!req.body.shortDescription || !req.body.title.trim()) {
         const error  = {
             message: "invalid youtubeUrl", field: "shortDescription"
         }
         errorsMessages.push(error)
-
+    }
+    if (!req.body.content || req.body.title.content > 1000 || !req.body.content.trim()) {
+        const error  = {
+            message: "invalid youtubeUrl", field: "shortDescription"
+        }
+        errorsMessages.push(error)
     }
     if (errorsMessages.length > 0) {
         res.status(400).send({"errorsMessages": errorsMessages})
