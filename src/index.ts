@@ -87,6 +87,22 @@ app.put('/bloggers/:id', (req: Request, res: Response) => {
     let youtubeUrl = req.body.youtubeUrl
     let pattern = /^https:\/\/([a-zA-Z\d_-]+\.)+[a-zA-Z\d_-]+(\/[a-zA-Z\d_-]+)*\/?$/
 
+    const errorsMessages = []
+
+    if(name.trim()) {
+        errorsMessages.push({field: 'name', message: 'invalid name'})
+    }
+
+    if(youtubeUrl) {
+
+    }
+
+    if(errorsMessages.length) {
+       return  res.status(400).send({errorsMessages})
+    }
+
+
+
     if (!name || !youtubeUrl || typeof name !== 'string' || typeof youtubeUrl !== 'string' ||
         !name.trim() || !youtubeUrl.trim() || name.length > 15 || youtubeUrl.length > 100 || !pattern) {
         res.status(400).send(
