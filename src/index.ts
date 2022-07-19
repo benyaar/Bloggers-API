@@ -118,7 +118,7 @@ app.put('/bloggers/:id', (req: Request, res: Response) => {
         errorsMessages.push(error)
     }
 
-    if (!req.body.youtubeUrl || req.body.youtubeUrl > 100 || !pattern.test(req.body.youtubeUrl)) {
+    if (!req.body.youtubeUrl || req.body.youtubeUrl.length > 100 || !pattern.test(req.body.youtubeUrl)) {
         const error  = {
             message: "invalid youtubeUrl", field: "youtubeUrl"
         }
@@ -135,7 +135,7 @@ app.put('/bloggers/:id', (req: Request, res: Response) => {
     if (blogger) {
         blogger.name = req.body.name;
         blogger.youtubeUrl = req.body.youtubeUrl;
-        res.send(204)
+        res.status(200).send({blogger})
     } else {
         res.send(404)
     }
@@ -226,37 +226,4 @@ app.delete('/posts/:id', (req: Request, res: Response) => {
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
-
-
-// let name = req.body.name
-// let youtubeUrl = req.body.youtubeUrl
-// let pattern = /^https:\/\/([a-zA-Z\d_-]+\.)+[a-zA-Z\d_-]+(\/[a-zA-Z\d_-]+)*\/?$/
-//
-// if (!name && !youtubeUrl || typeof name !== 'string' && typeof youtubeUrl !== 'string'
-//     || !name.trim() &&  !youtubeUrl.trim() ||  name.length > 15 && youtubeUrl.length > 100 || !pattern){
-//     res.status(400).send(
-//         {
-//             errorsMessages: [
-//                 { message: "error",
-//                     field: "youtubeUrl"
-//                 },
-//                 { message: "error",
-//                     field: "name"
-//                 },
-//
-//             ]})
-//
-// }  else if (!youtubeUrl ||  typeof youtubeUrl !== 'string' ||
-//     !youtubeUrl.trim()||  youtubeUrl.length > 100 || !pattern) {
-//     res.status(400).send(
-//         {
-//             errorsMessages: [
-//                 {
-//                     message: "error",
-//                     field: "youtubeUrl"
-//                 }
-//             ]
-//         })
-//     return
-// }
 
