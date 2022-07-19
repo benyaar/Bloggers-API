@@ -164,7 +164,7 @@ app.post('/posts', (req: Request, res: Response) => {
         errorsMessages.push(error)
     }
 
-    if (!req.body.shortDescription || !req.body.title.trim()) {
+    if (!req.body.shortDescription || req.body.title.length > 1000 || !req.body.title.trim()) {
         const error  = {
             message: "invalid youtubeUrl", field: "shortDescription"
         }
