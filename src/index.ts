@@ -159,20 +159,20 @@ app.post('/posts', (req: Request, res: Response) => {
 
     if (!req.body.title || req.body.title.length > 30 || !req.body.title.trim()) {
         const error = {
-            message: "invalid name", field: "title"
+            message: "invalid title", field: "title"
         }
         errorsMessages.push(error)
     }
 
     if (!req.body.shortDescription || !req.body.title.trim()) {
         const error  = {
-            message: "invalid youtubeUrl", field: "shortDescription"
+            message: "invalid shortDescription", field: "shortDescription"
         }
         errorsMessages.push(error)
     }
     if (!req.body.content || req.body.title.content > 1000 || !req.body.content.trim()) {
         const error  = {
-            message: "invalid youtubeUrl", field: "shortDescription"
+            message: "invalid content", field: "content"
         }
         errorsMessages.push(error)
     }
