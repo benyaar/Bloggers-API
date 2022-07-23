@@ -1,58 +1,34 @@
 import {Request, Response, Router} from "express";
 import {postsRepository} from "../repositories/posts-repository";
-import {bloggers} from "../repositories/bloggers-repository";
+import {bloggers, bloggersRepository} from "../repositories/bloggers-repository";
+import {body} from "express-validator";
+import {inputValidationMiddleWare} from "../middleWare/inputValidation";
 
+const titleValidation = body('title').isLength({min: 1, max: 30})
+const shortDescriptionValidation = body('shortDescription').isLength({min: 1, max: 100})
+const contentValidation = body('content').isLength({min: 1, max: 1000})
 
-
-
-export const postsRouter = Router ({})
+export const postsRouter = Router({})
 
 postsRouter.get('/', (req: Request, res: Response) => {
     const findPost = postsRepository.findPosts()
     res.send(findPost)
 })
-postsRouter.post('/', (req: Request, res: Response) => {
-    let errorsMessages: { message: string; field: string; }[] = []
+postsRouter.post('/', titleValidation, shortDescriptionValidation, contentValidation, inputValidationMiddleWare, (req: Request, res: Response) => {
 
-    if (!req.body.title || req.body.title.length > 30 || !req.body.title.trim()) {
-        const error = {
-            message: "invalid title", field: "title"
-        }
-        errorsMessages.push(error)
-    }
-    const bloggersID = bloggers.find(b => b.id === +req.body.bloggerId)
-    if (!req.body.bloggerId || !bloggersID) {
-        const error = {
-            message: "invalid bloggerId", field: "bloggerId"
-        }
-        errorsMessages.push(error)
-    }
+    let blogger = bloggersRepository.findBloggersById(req.body.bloggerId)
+    if (!blogger) {
+        return res.status(400).send({errorsMessages: [{message: 'Invalid bloggerId', field: "bloggerId"}]})
+    } else {
+        const newPost = postsRepository.createPost(
+            +req.params.id,
+            req.body.title,
+            req.body.shortDescription,
+            req.body.content,
+            req.body.bloggerId)
 
-    if (!req.body.shortDescription || req.body.shortDescription.length > 100 || !req.body.shortDescription.trim()) {
-        const error = {
-            message: "invalid shortDescription", field: "shortDescription"
-        }
-        errorsMessages.push(error)
+        res.status(201).send(newPost)
     }
-    if (!req.body.content || req.body.content.length > 1000 || !req.body.content.trim()) {
-        const error = {
-            message: "invalid content", field: "content"
-        }
-        errorsMessages.push(error)
-    }
-    if (errorsMessages.length > 0) {
-        res.status(400).send({"errorsMessages": errorsMessages})
-        return
-    }
-
-    const newPost = postsRepository.createPost(
-        +req.params.id,
-        req.body.title,
-        req.body.shortDescription,
-        req.body.content,
-        req.body.bloggerId)
-
-    res.status(201).send(newPost)
 })
 postsRouter.get('/:id', (req: Request, res: Response) => {
     const post = postsRepository.findPostById(+req.params.id)
@@ -63,47 +39,21 @@ postsRouter.get('/:id', (req: Request, res: Response) => {
         res.send(404)
     }
 })
-postsRouter.put('//:id', (req: Request, res: Response) => {
-    let errorsMessages: { message: string; field: string; }[] = []
+postsRouter.put('/:id',titleValidation, shortDescriptionValidation, contentValidation, inputValidationMiddleWare, (req: Request, res: Response) => {
 
-    if (!req.body.title || req.body.title.length > 30 || !req.body.title.trim()) {
-        const error = {
-            message: "invalid title", field: "title"
+    let blogger = bloggersRepository.findBloggersById(req.body.bloggerId)
+    if (!blogger) {
+        return res.status(400).send({errorsMessages: [{message: 'Invalid bloggerId', field: "bloggerId"}]})
+    } else {
+        const isUpdate = postsRepository.updatePost(+req.params.id,
+            req.body.title,
+            req.body.shortDescription,
+            req.body.content,
+            req.body.bloggerId)
+        if (isUpdate) {
+            const post = postsRepository.findPostById(+req.params.id)
+            res.status(204).send({post})
         }
-        errorsMessages.push(error)
-    }
-    const bloggersID = bloggers.find(b => b.id === +req.body.bloggerId)
-    if (!req.body.bloggerId || !bloggersID) {
-        const error = {
-            message: "invalid bloggerId", field: "bloggerId"
-        }
-        errorsMessages.push(error)
-    }
-
-    if (!req.body.shortDescription || req.body.shortDescription.length > 100 || !req.body.shortDescription.trim()) {
-        const error = {
-            message: "invalid shortDescription", field: "shortDescription"
-        }
-        errorsMessages.push(error)
-    }
-    if (!req.body.content || req.body.content.length > 1000 || !req.body.content.trim()) {
-        const error = {
-            message: "invalid content", field: "content"
-        }
-        errorsMessages.push(error)
-    }
-    if (errorsMessages.length > 0) {
-        res.status(400).send({"errorsMessages": errorsMessages})
-        return
-    }
-    const isUpdate = postsRepository.updatePost(+req.params.id,
-        req.body.title,
-        req.body.shortDescription,
-        req.body.content,
-        req.body.bloggerId)
-    if (isUpdate) {
-        const post = postsRepository.findPostById(+req.params.id)
-        res.status(204).send({post})
     }
 
 })

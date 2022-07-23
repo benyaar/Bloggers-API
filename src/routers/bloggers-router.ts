@@ -1,41 +1,27 @@
 import {Request, Response, Router} from "express";
 import {bloggersRepository} from "../repositories/bloggers-repository";
+import {body} from "express-validator";
+import {inputValidationMiddleWare} from "../middleWare/inputValidation";
 
-export const bloggersRouter = Router ({})
+export const bloggersRouter = Router({})
 
+
+const nameValidation = body('name').isLength({min: 1, max: 15})
+const urlValidation = body('youtubeUrl').isURL().isLength({min: 10, max: 100})
 
 bloggersRouter.get('/', (req: Request, res: Response) => {
-  const foundBloggers = bloggersRepository.findBloggers(req.query.name ? req.query.name.toString(): null)
-  res.send(foundBloggers)
+    const foundBloggers = bloggersRepository.findBloggers(req.query.name ? req.query.name.toString() : null)
+    res.send(foundBloggers)
 })
-bloggersRouter.post('/', (req: Request, res: Response) => {
-    let name = req.body.name
-    let youtubeUrl = req.body.youtubeUrl
-    let errorsMessages: { message: string; field: string; }[] = []
-    let pattern = /^https:\/\/([a-zA-Z\d_-]+\.)+[a-zA-Z\d_-]+(\/[a-zA-Z\d_-]+)*\/?$/
 
-    if (!name|| name.length > 15 || !name.trim()) {
-        const error = {
-            message: "invalid name", field: "name"
-        }
-        errorsMessages.push(error)
-    }
+bloggersRouter.post('/', nameValidation, urlValidation, inputValidationMiddleWare, (req: Request, res: Response) => {
+        let name = req.body.name
+        let youtubeUrl = req.body.youtubeUrl
 
-    if (!youtubeUrl || youtubeUrl.length > 100 || !pattern.test(youtubeUrl)) {
-        const error = {
-            message: "invalid youtubeUrl", field: "youtubeUrl"
-        }
-        errorsMessages.push(error)
+        const newBlogger = bloggersRepository.createBloggers(name, youtubeUrl)
+        res.status(201).send({newBlogger})
 
-    }
-    if (errorsMessages.length > 0) {
-        res.status(400).send({"errorsMessages": errorsMessages})
-        return
-    }
-    const newBlogger = bloggersRepository.createBloggers(req.body.name, req.body.youtubeUrl)
-    res.status(201).send({newBlogger})
-
-})
+    })
 bloggersRouter.get('/:id', (req: Request, res: Response) => {
     const blogger = bloggersRepository.findBloggersById(+req.params.id)
     if (blogger) {
@@ -44,30 +30,9 @@ bloggersRouter.get('/:id', (req: Request, res: Response) => {
         res.send(404)
     }
 })
-bloggersRouter.put('/:id', (req: Request, res: Response) => {
+bloggersRouter.put('/:id', nameValidation, urlValidation, inputValidationMiddleWare,(req: Request, res: Response) => {
     const name = req.body.name
     const youtubeUrl = req.body.youtubeUrl
-    let errorsMessages: { message: string; field: string; }[] = []
-    let pattern = /^https:\/\/([a-zA-Z\d_-]+\.)+[a-zA-Z\d_-]+(\/[a-zA-Z\d_-]+)*\/?$/
-
-    if (!name || name.length > 15 || !name.trim()) {
-        const error = {
-            message: "invalid name", field: "name"
-        }
-        errorsMessages.push(error)
-    }
-
-    if (!youtubeUrl || youtubeUrl.length > 100 || !pattern.test(youtubeUrl)) {
-        const error = {
-            message: "invalid youtubeUrl", field: "youtubeUrl"
-        }
-        errorsMessages.push(error)
-    }
-    if (errorsMessages.length > 0) {
-        res.status(400).send({"errorsMessages": errorsMessages})
-        return
-    }
-
     const isUpdated = bloggersRepository.updateBlogger(+req.params.id, name, youtubeUrl)
     if (isUpdated) {
         const blogger = bloggersRepository.findBloggersById(+req.params.id)
@@ -76,7 +41,7 @@ bloggersRouter.put('/:id', (req: Request, res: Response) => {
 
 })
 bloggersRouter.delete('/:id', (req: Request, res: Response) => {
-   const isDeleted = bloggersRepository.deleteBloggers(+req.params.id)
+    const isDeleted = bloggersRepository.deleteBloggers(+req.params.id)
     if (isDeleted) {
         res.send(204)
     } else {
