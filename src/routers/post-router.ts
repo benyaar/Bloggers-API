@@ -44,7 +44,7 @@ postsRouter.put('/:id',authMiddleware,titleValidation, shortDescriptionValidatio
 
     let blogger = bloggersRepository.findBloggersById(req.body.bloggerId)
     if (!blogger) {
-        return res.status(404).send({errorsMessages: [{message: 'Invalid bloggerId', field: "bloggerId"}]})
+        return res.status(400).send({errorsMessages: [{message: 'Invalid bloggerId', field: "bloggerId"}]})
     } else {
         const isUpdate = postsRepository.updatePost(+req.params.id,
             req.body.title,
@@ -54,6 +54,8 @@ postsRouter.put('/:id',authMiddleware,titleValidation, shortDescriptionValidatio
         if (isUpdate) {
             const post = postsRepository.findPostById(+req.params.id)
             res.status(204).send({post})
+        } else {
+            res.send(404)
         }
     }
 
