@@ -1,46 +1,27 @@
 import {Request, Response, Router} from "express";
-export let bloggers = [
-    {
-        id: 1,
-        name: 'study',
-        youtubeUrl: 'backend'
-    },
-    {
-        id: 2,
-        name: 'work',
-        youtubeUrl: 'node'
-    },
-    {
-        id: 3,
-        name: 'relax',
-        youtubeUrl: 'html'
-    },
-]
+import {bloggersRepository} from "../repositories/bloggers-repository";
+
 export const bloggersRouter = Router ({})
 
 
 bloggersRouter.get('/', (req: Request, res: Response) => {
-    const name = req.query.name
-    if (name) {
-        let searchString = name.toString()
-        res.send(bloggers.filter(v => v.name.indexOf(searchString) > -1))
-    } else {
-        res.send(bloggers)
-    }
+  const foundBloggers = bloggersRepository.findBloggers(req.query.name ? req.query.name.toString(): null)
+  res.send(foundBloggers)
 })
 bloggersRouter.post('/', (req: Request, res: Response) => {
-
+    let name = req.body.name
+    let youtubeUrl = req.body.youtubeUrl
     let errorsMessages: { message: string; field: string; }[] = []
     let pattern = /^https:\/\/([a-zA-Z\d_-]+\.)+[a-zA-Z\d_-]+(\/[a-zA-Z\d_-]+)*\/?$/
 
-    if (!req.body.name || req.body.name.length > 15 || !req.body.name.trim()) {
+    if (!name|| name.length > 15 || !name.trim()) {
         const error = {
             message: "invalid name", field: "name"
         }
         errorsMessages.push(error)
     }
 
-    if (!req.body.youtubeUrl || req.body.youtubeUrl.length > 100 || !pattern.test(req.body.youtubeUrl)) {
+    if (!youtubeUrl || youtubeUrl.length > 100 || !pattern.test(youtubeUrl)) {
         const error = {
             message: "invalid youtubeUrl", field: "youtubeUrl"
         }
@@ -51,18 +32,12 @@ bloggersRouter.post('/', (req: Request, res: Response) => {
         res.status(400).send({"errorsMessages": errorsMessages})
         return
     }
-    const newBloggers = {
-        id: +(new Date()),
-        name: req.body.name,
-        youtubeUrl: req.body.youtubeUrl
-    }
-    bloggers.push(newBloggers)
-    res.status(201).send(newBloggers)
-
+    const newBlogger = bloggersRepository.createBloggers(req.body.name, req.body.youtubeUrl)
+    res.status(201).send({newBlogger})
 
 })
 bloggersRouter.get('/:id', (req: Request, res: Response) => {
-    let blogger = bloggers.find(b => b.id === +req.params.id)
+    const blogger = bloggersRepository.findBloggersById(+req.params.id)
     if (blogger) {
         res.send(blogger)
     } else {
@@ -70,42 +45,39 @@ bloggersRouter.get('/:id', (req: Request, res: Response) => {
     }
 })
 bloggersRouter.put('/:id', (req: Request, res: Response) => {
+    const name = req.body.name
+    const youtubeUrl = req.body.youtubeUrl
     let errorsMessages: { message: string; field: string; }[] = []
     let pattern = /^https:\/\/([a-zA-Z\d_-]+\.)+[a-zA-Z\d_-]+(\/[a-zA-Z\d_-]+)*\/?$/
 
-    if (!req.body.name || req.body.name.length > 15 || !req.body.name.trim()) {
+    if (!name || name.length > 15 || !name.trim()) {
         const error = {
             message: "invalid name", field: "name"
         }
         errorsMessages.push(error)
     }
 
-    if (!req.body.youtubeUrl || req.body.youtubeUrl.length > 100 || !pattern.test(req.body.youtubeUrl)) {
+    if (!youtubeUrl || youtubeUrl.length > 100 || !pattern.test(youtubeUrl)) {
         const error = {
             message: "invalid youtubeUrl", field: "youtubeUrl"
         }
         errorsMessages.push(error)
-
     }
     if (errorsMessages.length > 0) {
         res.status(400).send({"errorsMessages": errorsMessages})
         return
     }
 
-    let blogger = bloggers.find(b => b.id === +req.params.id)
-    if (blogger) {
-        blogger.name = req.body.name;
-        blogger.youtubeUrl = req.body.youtubeUrl;
+    const isUpdated = bloggersRepository.updateBlogger(+req.params.id, name, youtubeUrl)
+    if (isUpdated) {
+        const blogger = bloggersRepository.findBloggersById(+req.params.id)
         res.status(204).send({blogger})
-    } else {
-        res.send(404)
     }
+
 })
 bloggersRouter.delete('/:id', (req: Request, res: Response) => {
-    const id = +req.params.id
-    const newBloggers = bloggers.filter(b => b.id !== id)
-    if (newBloggers.length < bloggers.length) {
-        bloggers = newBloggers
+   const isDeleted = bloggersRepository.deleteBloggers(+req.params.id)
+    if (isDeleted) {
         res.send(204)
     } else {
         res.send(404)
