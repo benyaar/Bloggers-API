@@ -7,8 +7,8 @@ import {authMiddleware} from "../middleWare/authValidation";
 export const bloggersRouter = Router({})
 
 
-const nameValidation = body('name').isLength({min: 1, max: 15})
-const urlValidation = body('youtubeUrl').isURL().isLength({min: 10, max: 100})
+const nameValidation = body('name').trim().isLength({min: 1, max: 15}).trim()
+const urlValidation = body('youtubeUrl').isURL().trim().isLength({min: 10, max: 100})
 
 bloggersRouter.get('/', (req: Request, res: Response) => {
     const foundBloggers = bloggersRepository.findBloggers()

@@ -5,9 +5,9 @@ import {body} from "express-validator";
 import {inputValidationMiddleWare} from "../middleWare/inputValidation";
 import {authMiddleware} from "../middleWare/authValidation";
 
-const titleValidation = body('title').isLength({min: 1, max: 30})
-const shortDescriptionValidation = body('shortDescription').isLength({min: 1, max: 100})
-const contentValidation = body('content').isLength({min: 1, max: 1000})
+const titleValidation = body('title').trim().isLength({min: 1, max: 30})
+const shortDescriptionValidation = body('shortDescription').trim().isLength({min: 1, max: 100})
+const contentValidation = body('content').trim().isLength({min: 1, max: 1000})
 
 export const postsRouter = Router({})
 
@@ -44,7 +44,7 @@ postsRouter.put('/:id',authMiddleware,titleValidation, shortDescriptionValidatio
 
     let blogger = bloggersRepository.findBloggersById(req.body.bloggerId)
     if (!blogger) {
-        return res.status(400).send({errorsMessages: [{message: 'Invalid bloggerId', field: "bloggerId"}]})
+        return res.status(404).send({errorsMessages: [{message: 'Invalid bloggerId', field: "bloggerId"}]})
     } else {
         const isUpdate = postsRepository.updatePost(+req.params.id,
             req.body.title,
