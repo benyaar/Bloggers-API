@@ -17,12 +17,8 @@ export let bloggers = [
 ]
 
 export const bloggersRepository = {
-    findBloggers(name: string | null | undefined){
-        if (name) {
-            return bloggers.filter(b=> b.name.indexOf(name) > -1)
-        } else {
+    findBloggers(){
             return bloggers
-        }
     },
     findBloggersById(id:number){
         return bloggers.find(b => b.id === id)

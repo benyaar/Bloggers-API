@@ -11,7 +11,7 @@ const nameValidation = body('name').isLength({min: 1, max: 15})
 const urlValidation = body('youtubeUrl').isURL().isLength({min: 10, max: 100})
 
 bloggersRouter.get('/', (req: Request, res: Response) => {
-    const foundBloggers = bloggersRepository.findBloggers(req.query.name ? req.query.name.toString() : null)
+    const foundBloggers = bloggersRepository.findBloggers()
     res.send(foundBloggers)
 })
 
@@ -20,7 +20,7 @@ bloggersRouter.post('/', authMiddleware,nameValidation, urlValidation, inputVali
         let youtubeUrl = req.body.youtubeUrl
 
         const newBlogger = bloggersRepository.createBloggers(name, youtubeUrl)
-        res.status(201).send({newBlogger})
+        res.status(201).send(newBlogger)
 
     })
 bloggersRouter.get('/:id', (req: Request, res: Response) => {
