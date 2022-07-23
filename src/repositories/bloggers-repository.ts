@@ -39,9 +39,9 @@ export const bloggersRepository = {
         if (blogger) {
             blogger.name = name;
             blogger.youtubeUrl = youtubeUrl;
-           return true
-        } else {
-           return false
+            return true
+        } else{
+            return false
         }
     },
     deleteBloggers(id: number){

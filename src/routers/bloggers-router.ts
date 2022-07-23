@@ -37,9 +37,9 @@ bloggersRouter.put('/:id', authMiddleware, nameValidation, urlValidation, inputV
     const isUpdated = bloggersRepository.updateBlogger(+req.params.id, name, youtubeUrl)
     if (isUpdated) {
         const blogger = bloggersRepository.findBloggersById(+req.params.id)
-        res.status(204).send({blogger})
+        res.status(204).send(blogger)
     } else {
-        res.status(404)
+        res.send(404)
     }
 
 })
