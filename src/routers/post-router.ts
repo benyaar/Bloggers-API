@@ -1,8 +1,9 @@
 import {Request, Response, Router} from "express";
 import {postsRepository} from "../repositories/posts-repository";
-import {bloggers, bloggersRepository} from "../repositories/bloggers-repository";
+import { bloggersRepository} from "../repositories/bloggers-repository";
 import {body} from "express-validator";
 import {inputValidationMiddleWare} from "../middleWare/inputValidation";
+import {authMiddleware} from "../middleWare/authValidation";
 
 const titleValidation = body('title').isLength({min: 1, max: 30})
 const shortDescriptionValidation = body('shortDescription').isLength({min: 1, max: 100})
@@ -14,7 +15,7 @@ postsRouter.get('/', (req: Request, res: Response) => {
     const findPost = postsRepository.findPosts()
     res.send(findPost)
 })
-postsRouter.post('/', titleValidation, shortDescriptionValidation, contentValidation, inputValidationMiddleWare, (req: Request, res: Response) => {
+postsRouter.post('/',authMiddleware, titleValidation, shortDescriptionValidation, contentValidation, inputValidationMiddleWare, (req: Request, res: Response) => {
 
     let blogger = bloggersRepository.findBloggersById(req.body.bloggerId)
     if (!blogger) {
@@ -39,7 +40,7 @@ postsRouter.get('/:id', (req: Request, res: Response) => {
         res.send(404)
     }
 })
-postsRouter.put('/:id',titleValidation, shortDescriptionValidation, contentValidation, inputValidationMiddleWare, (req: Request, res: Response) => {
+postsRouter.put('/:id',authMiddleware,titleValidation, shortDescriptionValidation, contentValidation, inputValidationMiddleWare, (req: Request, res: Response) => {
 
     let blogger = bloggersRepository.findBloggersById(req.body.bloggerId)
     if (!blogger) {
@@ -57,7 +58,7 @@ postsRouter.put('/:id',titleValidation, shortDescriptionValidation, contentValid
     }
 
 })
-postsRouter.delete('//:id', (req: Request, res: Response) => {
+postsRouter.delete('//:id',authMiddleware, (req: Request, res: Response) => {
     const isDeleted = postsRepository.deletePosts(+req.params.id)
     if (isDeleted) {
         res.send(204)
