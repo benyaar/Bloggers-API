@@ -38,6 +38,8 @@ bloggersRouter.put('/:id', authMiddleware, nameValidation, urlValidation, inputV
     if (isUpdated) {
         const blogger = bloggersRepository.findBloggersById(+req.params.id)
         res.status(204).send({blogger})
+    } else {
+        res.status(404)
     }
 
 })
