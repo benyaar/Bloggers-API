@@ -58,7 +58,7 @@ postsRouter.put('/:id',authMiddleware,titleValidation, shortDescriptionValidatio
     }
 
 })
-postsRouter.delete('//:id',authMiddleware, (req: Request, res: Response) => {
+postsRouter.delete('/:id',authMiddleware, (req: Request, res: Response) => {
     const isDeleted = postsRepository.deletePosts(+req.params.id)
     if (isDeleted) {
         res.send(204)
