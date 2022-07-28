@@ -1,26 +1,14 @@
+import { postsCollection} from "./db";
 
-let posts = [
-    {
-        id: 1,
-        title: "All about JS",
-        shortDescription: "JS",
-        content: "post",
-        bloggerId: 1,
-        bloggerName: "Brendan Eich"
-    }
-]
 
 export const postsRepository = {
-    findPosts(){
-        return posts
+   async findPosts(){
+       return await postsCollection.find().toArray()
     },
-    findPostById(id:number){
-        let post = posts.find(p => p.id === id)
-        if (post) {
-            return post
-        }
+   async findPostById(id:number){
+    return await postsCollection.findOne({id: id})
     },
-    createPost(id:number, title:string,shortDescription:string, content:string, bloggerId:number){
+    async createPost(id:number, title:string,shortDescription:string, content:string, bloggerId:number){
         const newPosts = {
             id: +(new Date()),
             title: title,
@@ -29,27 +17,23 @@ export const postsRepository = {
             bloggerId: bloggerId,
             bloggerName: "Brendan Eich"
         }
-        posts.push(newPosts)
+        await postsCollection.insertOne(newPosts)
         return newPosts
     },
-    updatePost(id:number, title:string,shortDescription:string, content:string, bloggerId:number) {
-        let post = posts.find(b => b.id === id)
-        if (post) {
-            post.title = title
-            post.shortDescription = shortDescription
-            post.content = content
-            post.bloggerId = bloggerId
-            return true
-        } else {
-            return false
-        }
+   async updatePost(id:number, title:string,shortDescription:string, content:string, bloggerId:number) {
+       const result = await postsCollection.updateOne({id: id}, {
+           $set: {
+               title: title,
+               shortDescription: shortDescription,
+               content: content,
+               bloggerId: bloggerId,
+           }
+       })
+       return result.matchedCount === 1
     },
-    deletePosts(id: number){
+   async deletePosts(id: number){
 
-        const newPost = posts.filter(p => p.id !== id)
-        if (newPost.length < posts.length) {
-            posts = newPost
-            return true
-        }
+        const result = await postsCollection.deleteOne({id: id})
+        return result.deletedCount === 1
     }
 }

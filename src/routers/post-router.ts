@@ -11,13 +11,13 @@ const contentValidation = body('content').trim().isLength({min: 1, max: 1000})
 
 export const postsRouter = Router({})
 
-postsRouter.get('/', (req: Request, res: Response) => {
-    const findPost = postsRepository.findPosts()
+postsRouter.get('/', async (req: Request, res: Response) => {
+    const findPost = await postsRepository.findPosts()
     res.send(findPost)
 })
-postsRouter.post('/',authMiddleware, titleValidation, shortDescriptionValidation, contentValidation, inputValidationMiddleWare, (req: Request, res: Response) => {
+postsRouter.post('/',authMiddleware, titleValidation, shortDescriptionValidation, contentValidation, inputValidationMiddleWare, async (req: Request, res: Response) => {
 
-    let blogger = bloggersRepository.findBloggersById(req.body.bloggerId)
+    let blogger = await bloggersRepository.findBloggersById(req.body.bloggerId)
     if (!blogger) {
         return res.status(400).send({errorsMessages: [{message: 'Invalid bloggerId', field: "bloggerId"}]})
     } else {
@@ -31,8 +31,8 @@ postsRouter.post('/',authMiddleware, titleValidation, shortDescriptionValidation
         res.status(201).send(newPost)
     }
 })
-postsRouter.get('/:id', (req: Request, res: Response) => {
-    const post = postsRepository.findPostById(+req.params.id)
+postsRouter.get('/:id', async (req: Request, res: Response) => {
+    const post = await postsRepository.findPostById(+req.params.id)
 
     if (post) {
         res.send(post)
@@ -40,19 +40,19 @@ postsRouter.get('/:id', (req: Request, res: Response) => {
         res.send(404)
     }
 })
-postsRouter.put('/:id',authMiddleware,titleValidation, shortDescriptionValidation, contentValidation, inputValidationMiddleWare, (req: Request, res: Response) => {
+postsRouter.put('/:id',authMiddleware,titleValidation, shortDescriptionValidation, contentValidation, inputValidationMiddleWare, async (req: Request, res: Response) => {
 
-    let blogger = bloggersRepository.findBloggersById(req.body.bloggerId)
+    let blogger = await bloggersRepository.findBloggersById(req.body.bloggerId)
     if (!blogger) {
         return res.status(400).send({errorsMessages: [{message: 'Invalid bloggerId', field: "bloggerId"}]})
     } else {
-        const isUpdate = postsRepository.updatePost(+req.params.id,
+        const isUpdate = await postsRepository.updatePost(+req.params.id,
             req.body.title,
             req.body.shortDescription,
             req.body.content,
             req.body.bloggerId)
         if (isUpdate) {
-            const post = postsRepository.findPostById(+req.params.id)
+            const post = await postsRepository.findPostById(+req.params.id)
             res.status(204).send({post})
         } else {
             res.send(404)
@@ -60,8 +60,8 @@ postsRouter.put('/:id',authMiddleware,titleValidation, shortDescriptionValidatio
     }
 
 })
-postsRouter.delete('/:id',authMiddleware, (req: Request, res: Response) => {
-    const isDeleted = postsRepository.deletePosts(+req.params.id)
+postsRouter.delete('/:id',authMiddleware, async (req: Request, res: Response) => {
+    const isDeleted = await postsRepository.deletePosts(+req.params.id)
     if (isDeleted) {
         res.send(204)
     } else {
