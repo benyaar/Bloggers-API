@@ -17,6 +17,7 @@ export const postsRepository = {
             bloggerId: bloggerId,
             bloggerName: "Brendan Eich"
         }
+        console.log("REPOSITORY")
         await postsCollection.insertOne(newPosts)
         return newPosts
     },

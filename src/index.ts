@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import {bloggersRouter} from "./routers/bloggers-router";
 import {postsRouter} from "./routers/post-router";
 import {runDb} from "./repositories/db";
+import cors from 'cors'
 
 
 const app = express()
@@ -10,7 +11,8 @@ const port = process.env.PORT || 3000
 
 
 
-const parserMiddleware = bodyParser()
+const parserMiddleware = bodyParser.json()
+app.use(cors())
 app.use(parserMiddleware)
 
 app.use('/bloggers', bloggersRouter)

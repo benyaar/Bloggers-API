@@ -2,22 +2,22 @@ import {MongoClient} from "mongodb";
 
 
 export type BloggersType = {
-    id: number;
-    name: string;
+    id: number
+    name: string
     youtubeUrl: string
 }
 export type PostsType = {
-    id: number,
-    title: string,
-    shortDescription: string,
-    content: string,
-    bloggerId: number,
+    id: number
+    title: string
+    shortDescription: string
+    content: string
+    bloggerId: number
     bloggerName: string
 }
 
 const mongoUri = process.env.mongoURI || "mongodb://0.0.0.0:27017"
 
-const client = new MongoClient (mongoUri)
+const client = new MongoClient(mongoUri)
 const db = client.db("bloggersList")
 export const bloggersCollection = db.collection<BloggersType>("bloggers")
 export const postsCollection = db.collection<PostsType>("posts")

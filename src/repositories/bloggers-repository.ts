@@ -1,23 +1,16 @@
-import {bloggersCollection} from "./db";
-
+import {bloggersCollection, BloggersType} from "./db";
 
 
 export const bloggersRepository = {
     async findBloggers() {
-        const result = await bloggersCollection.find().toArray()
-        return result
+        return await bloggersCollection.find().toArray()
     },
     async findBloggersById(id: number) {
         return await bloggersCollection.findOne({id: id})
 
     },
-    async createBloggers(name: string, youtubeUrl: string) {
+    async createBloggers(newBlogger:BloggersType) {
 
-        const newBlogger = {
-            id: +(new Date()),
-            name: name,
-            youtubeUrl: youtubeUrl
-        }
         await bloggersCollection.insertOne(newBlogger)
         return newBlogger
     },

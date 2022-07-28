@@ -1,9 +1,9 @@
 import {Request, Response, Router} from "express";
 import {postsRepository} from "../repositories/posts-repository";
-import { bloggersRepository} from "../repositories/bloggers-repository";
 import {body} from "express-validator";
 import {inputValidationMiddleWare} from "../middleWare/inputValidation";
 import {authMiddleware} from "../middleWare/authValidation";
+import {bloggersService} from "../domain/bloggers-service";
 
 const titleValidation = body('title').trim().isLength({min: 1, max: 30})
 const shortDescriptionValidation = body('shortDescription').trim().isLength({min: 1, max: 100})
@@ -17,11 +17,11 @@ postsRouter.get('/', async (req: Request, res: Response) => {
 })
 postsRouter.post('/',authMiddleware, titleValidation, shortDescriptionValidation, contentValidation, inputValidationMiddleWare, async (req: Request, res: Response) => {
 
-    let blogger = await bloggersRepository.findBloggersById(req.body.bloggerId)
+    let blogger = await bloggersService.findBloggersById(req.body.bloggerId)
     if (!blogger) {
         return res.status(400).send({errorsMessages: [{message: 'Invalid bloggerId', field: "bloggerId"}]})
     } else {
-        const newPost = postsRepository.createPost(
+        const newPost = await postsRepository.createPost(
             +req.params.id,
             req.body.title,
             req.body.shortDescription,
@@ -42,7 +42,7 @@ postsRouter.get('/:id', async (req: Request, res: Response) => {
 })
 postsRouter.put('/:id',authMiddleware,titleValidation, shortDescriptionValidation, contentValidation, inputValidationMiddleWare, async (req: Request, res: Response) => {
 
-    let blogger = await bloggersRepository.findBloggersById(req.body.bloggerId)
+    let blogger = await bloggersService.findBloggersById(req.body.bloggerId)
     if (!blogger) {
         return res.status(400).send({errorsMessages: [{message: 'Invalid bloggerId', field: "bloggerId"}]})
     } else {
