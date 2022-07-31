@@ -2,8 +2,8 @@ import {bloggersRepository} from "../repositories/bloggers-repository";
 
 
 export const bloggersService = {
-    async findBloggers(pageSize:number, pageNumber:number) {
-        return await bloggersRepository.findBloggers(pageSize, pageNumber)
+    async findBloggers(pageSize:number, pageNumber:number, searchNameTerm:string) {
+        return await bloggersRepository.findBloggers(pageSize, pageNumber, searchNameTerm)
     },
     async findBloggersById(id: number) {
         return await bloggersRepository.findBloggersById(id)

@@ -1,4 +1,5 @@
 import {bloggersCollection, BloggersType} from "./db";
+
 const options = {
     projection: {
         _id: 0,
@@ -6,8 +7,8 @@ const options = {
 }
 
 export const bloggersRepository = {
-    async findBloggers(pageSize:number, pageNumber:number) {
-        return await bloggersCollection.find({}, options).skip((pageNumber-1)*pageSize).limit(pageSize).toArray()
+    async findBloggers(pageSize:number, pageNumber:number, searchNameTerm:string) {
+        return await bloggersCollection.find({name: {$regex: searchNameTerm}}, options).skip((pageNumber-1)*pageSize).limit(pageSize).toArray()
     },
     async findBloggersById(id: number) {
         return await bloggersCollection.findOne({id: id}, options)
@@ -36,8 +37,7 @@ export const bloggersRepository = {
         return result.deletedCount === 1
     },
     async getCount() {
-        const result = await bloggersCollection.count({})
-        return result
+        return await bloggersCollection.count({})
     }
 
 
