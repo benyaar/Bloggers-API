@@ -14,7 +14,8 @@ export const postsRepository = {
     },
     async createPost(newPosts: PostsType) {
         await postsCollection.insertOne(newPosts)
-        return newPosts
+        const {_id, ...newPostCopy} = newPosts
+        return newPostCopy
     },
     async updatePost(id: number, title: string, shortDescription: string, content: string, bloggerId: number) {
         const result = await postsCollection.updateOne({id: id}, {

@@ -16,8 +16,11 @@ export const bloggersRepository = {
     async createBloggers(newBlogger: BloggersType) {
 
         await bloggersCollection.insertOne(newBlogger)
-        return newBlogger
-    },
+        const {_id, ...newBloggerCopy} = newBlogger
+        return newBloggerCopy
+
+    }
+    ,
     async updateBlogger(id: number, name: string, youtubeUrl: string) {
         const result = await bloggersCollection.updateOne({id: id}, {
             $set: {
