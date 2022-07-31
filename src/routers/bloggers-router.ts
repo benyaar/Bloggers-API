@@ -19,14 +19,14 @@ bloggersRouter.get('/', async (req: Request, res: Response) => {
 
 
     const foundBloggers = await bloggersService.findBloggers(pageSize, pageNumber,searchNameTerm )
-    const getCount = await bloggersService.getCount()
+    //const getCount = await bloggersService.getCount()
 
 
     res.send({
-        "pagesCount": Math.ceil(getCount / pageSize),
+        "pagesCount": Math.ceil(foundBloggers.length / pageSize),
         "page": pageNumber,
         "pageSize": pageSize,
-        "totalCount": getCount,
+        "totalCount": foundBloggers.length,
         "items": foundBloggers
     })
 })

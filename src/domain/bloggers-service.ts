@@ -24,9 +24,9 @@ export const bloggersService = {
     async deleteBloggers(id: number) {
         return await bloggersRepository.deleteBloggers(id)
     },
-    async getCount() {
-        return await bloggersRepository.getCount()
-    },
+    // async getCount() {
+    //     return await bloggersRepository.getCount()
+    // },
 
 
 
