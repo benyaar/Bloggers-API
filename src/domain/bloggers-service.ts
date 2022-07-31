@@ -24,7 +24,7 @@ export const bloggersService = {
     async deleteBloggers(id: number) {
         return await bloggersRepository.deleteBloggers(id)
     },
-    async getCount(searchNameTerm: string) {
+    async getCount(searchNameTerm:string) {
         return await bloggersRepository.getCount(searchNameTerm)
     },
 
