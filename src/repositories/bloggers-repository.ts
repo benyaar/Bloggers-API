@@ -1,12 +1,16 @@
 import {bloggersCollection, BloggersType} from "./db";
-
+const options = {
+    projection: {
+        _id: 0,
+    }
+}
 
 export const bloggersRepository = {
     async findBloggers() {
-        return await bloggersCollection.find().toArray()
+        return await bloggersCollection.find({}, options).toArray()
     },
     async findBloggersById(id: number) {
-        return await bloggersCollection.findOne({id: id})
+        return await bloggersCollection.findOne({id: id}, options)
 
     },
     async createBloggers(newBlogger: BloggersType) {

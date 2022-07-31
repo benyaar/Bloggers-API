@@ -1,12 +1,16 @@
 import {postsCollection, PostsType} from "./db";
 
-
+const options = {
+    projection: {
+        _id: 0,
+    }
+}
 export const postsRepository = {
     async findPosts() {
-        return await postsCollection.find().toArray()
+        return await postsCollection.find({}, options).toArray()
     },
     async findPostById(id: number) {
-        return await postsCollection.findOne({id: id})
+        return await postsCollection.findOne({id: id}, options)
     },
     async createPost(newPosts: PostsType) {
         await postsCollection.insertOne(newPosts)
