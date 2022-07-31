@@ -12,8 +12,8 @@ const urlValidation = body('youtubeUrl').isURL().trim().isLength({min: 10, max: 
 
 bloggersRouter.get('/',  async (req: Request, res: Response) => {
 
-    const pageSize :number = Number(req.query.pageSize) || 10
-    const pageNumber :number = Number(req.query.pageNumber) || 1
+    const pageSize :number = Number(req.query.PageSize) || 10
+    const pageNumber :number = Number(req.query.PageNumber) || 1
 
 
     const foundBloggers =  await bloggersService.findBloggers(pageSize, pageNumber)
