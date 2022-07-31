@@ -22,8 +22,8 @@ bloggersRouter.get('/',  async (req: Request, res: Response) => {
 
 
     res.send({
-        "pagesCount": pageNumber,
-        "page": Math.ceil(getCount/pageSize),
+        "pagesCount": Math.ceil(getCount/pageSize),
+        "page": pageNumber,
         "pageSize": pageSize,
         "totalCount": getCount,
         "items": foundBloggers
