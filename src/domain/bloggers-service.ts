@@ -15,6 +15,7 @@ export const bloggersService = {
             name: name,
             youtubeUrl: youtubeUrl,
         }
+        // @ts-ignore
         return await bloggersRepository.createBloggers(newBlogger)
     },
     async updateBlogger(id: number, name: string, youtubeUrl: string) {

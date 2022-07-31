@@ -17,6 +17,7 @@ export const postsService = {
             bloggerId: bloggerId,
             bloggerName: "Brendan Eich"
         }
+        // @ts-ignore
         return await postsRepository.createPost(newPosts)
 
     },

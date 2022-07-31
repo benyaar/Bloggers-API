@@ -5,6 +5,7 @@ export type BloggersType = {
     id: number
     name: string
     youtubeUrl: string
+    _id:string
 }
 export type PostsType = {
     id: number
@@ -13,6 +14,7 @@ export type PostsType = {
     content: string
     bloggerId: number
     bloggerName: string
+    _id:string
 
 }
 
