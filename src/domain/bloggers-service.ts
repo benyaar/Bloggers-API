@@ -10,20 +10,17 @@ export const bloggersService = {
 
     },
     async createBloggers(name: string, youtubeUrl: string) {
-
         const newBlogger = {
             id: +(new Date()),
             name: name,
             youtubeUrl: youtubeUrl
         }
-       return await bloggersRepository.createBloggers(newBlogger)
-
+        return await bloggersRepository.createBloggers(newBlogger)
     },
     async updateBlogger(id: number, name: string, youtubeUrl: string) {
         return await bloggersRepository.updateBlogger(id, name, youtubeUrl)
     },
     async deleteBloggers(id: number) {
-
         return await bloggersRepository.deleteBloggers(id)
     }
 

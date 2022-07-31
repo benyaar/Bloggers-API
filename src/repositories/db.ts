@@ -15,7 +15,7 @@ export type PostsType = {
     bloggerName: string
 }
 
-const mongoUri = process.env.mongoURI || "mongodb://0.0.0.0:27017"
+const mongoUri = process.env.mongoURI || "mongodb+srv://admin:admin@cluster0.9zvor.mongodb.net/bloggersList?retryWrites=true&w=majority"
 
 const client = new MongoClient(mongoUri)
 const db = client.db("bloggersList")

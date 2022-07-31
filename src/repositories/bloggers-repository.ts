@@ -9,7 +9,7 @@ export const bloggersRepository = {
         return await bloggersCollection.findOne({id: id})
 
     },
-    async createBloggers(newBlogger:BloggersType) {
+    async createBloggers(newBlogger: BloggersType) {
 
         await bloggersCollection.insertOne(newBlogger)
         return newBlogger
