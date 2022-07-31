@@ -13,7 +13,7 @@ export const bloggersService = {
         const newBlogger = {
             id: +(new Date()),
             name: name,
-            youtubeUrl: youtubeUrl
+            youtubeUrl: youtubeUrl,
         }
         return await bloggersRepository.createBloggers(newBlogger)
     },
