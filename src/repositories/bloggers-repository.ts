@@ -6,8 +6,8 @@ const options = {
 }
 
 export const bloggersRepository = {
-    async findBloggers() {
-        return await bloggersCollection.find({}, options).toArray()
+    async findBloggers(pageSize:number, pageNumber:number) {
+        return await bloggersCollection.find({}, options).skip((pageNumber-1)*pageSize).limit(pageSize).toArray()
     },
     async findBloggersById(id: number) {
         return await bloggersCollection.findOne({id: id}, options)
@@ -34,6 +34,10 @@ export const bloggersRepository = {
 
         const result = await bloggersCollection.deleteOne({id: id})
         return result.deletedCount === 1
+    },
+    async getCount() {
+        const result = await bloggersCollection.count({})
+        return result
     }
 
 

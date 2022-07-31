@@ -11,8 +11,23 @@ const nameValidation = body('name').trim().isLength({min: 1, max: 15}).trim()
 const urlValidation = body('youtubeUrl').isURL().trim().isLength({min: 10, max: 100})
 
 bloggersRouter.get('/',  async (req: Request, res: Response) => {
-    const foundBloggers =  await bloggersService.findBloggers()
-    res.send(foundBloggers)
+
+    const pageSize :number = Number(req.query.pageSize) || 10
+    const pageNumber :number = Number(req.query.pageNumber) || 1
+
+
+    const foundBloggers =  await bloggersService.findBloggers(pageSize, pageNumber)
+    const getCount = await bloggersService.getCount()
+
+
+
+    res.send({
+        "pagesCount": pageNumber,
+        "page": Math.ceil(getCount/pageSize),
+        "pageSize": pageSize,
+        "totalCount": getCount,
+        "items": foundBloggers
+    })
 })
 
 bloggersRouter.post('/', authMiddleware,nameValidation, urlValidation, inputValidationMiddleWare, async (req: Request, res: Response) => {
