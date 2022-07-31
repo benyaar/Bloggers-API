@@ -21,8 +21,6 @@ bloggersRouter.get('/', async (req: Request, res: Response) => {
     const foundBloggers = await bloggersService.findBloggers(pageSize, pageNumber,searchNameTerm )
     const getCount = await bloggersService.getCount(searchNameTerm)
 
-
-
     res.send({
         "pagesCount": Math.ceil(getCount/ pageSize),
         "page": pageNumber,

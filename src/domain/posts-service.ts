@@ -1,6 +1,7 @@
 import {postsRepository} from "../repositories/posts-repository";
 
 
+
 export const postsService = {
     async findPosts() {
         return await postsRepository.findPosts()
@@ -26,5 +27,8 @@ export const postsService = {
     },
     async deletePosts(id: number) {
         return await postsRepository.deletePosts(id)
-    }
+    },
+    async getCount() {
+        return await postsRepository.getCount()
+    },
 }

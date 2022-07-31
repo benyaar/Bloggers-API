@@ -1,4 +1,4 @@
-import {postsCollection, PostsType} from "./db";
+import { postsCollection, PostsType} from "./db";
 
 const options = {
     projection: {
@@ -32,5 +32,8 @@ export const postsRepository = {
 
         const result = await postsCollection.deleteOne({id: id})
         return result.deletedCount === 1
+    },
+    async getCount() {
+        return await postsCollection.count({})
     }
 }
