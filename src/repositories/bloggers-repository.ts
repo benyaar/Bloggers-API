@@ -36,9 +36,9 @@ export const bloggersRepository = {
         const result = await bloggersCollection.deleteOne({id: id})
         return result.deletedCount === 1
     },
-    // async getCount() {
-    //     return await bloggersCollection.count({})
-    // }
+    async getCount(searchNameTerm:string) {
+        return await bloggersCollection.count({name: {$regex: searchNameTerm}})
+    }
 
 
 }
