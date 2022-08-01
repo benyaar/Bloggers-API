@@ -5,6 +5,7 @@ import {inputValidationMiddleWare} from "../middleWare/inputValidation";
 import {authMiddleware} from "../middleWare/authValidation";
 import {toString} from "express-validator/src/utils";
 import {postsService} from "../domain/posts-service";
+import {contentValidation, shortDescriptionValidation, titleValidation} from "./post-router";
 
 export const bloggersRouter = Router({})
 
@@ -68,33 +69,30 @@ bloggersRouter.delete('/:id', authMiddleware, async (req: Request, res: Response
     }
 })
 
-bloggersRouter.post('/:bloggerId/post', authMiddleware, async (req: Request, res: Response) => {
-    const bloggerId = await bloggersService.findBloggersById(+req.params.bloggerId)
-    if (bloggerId) {
-        let name = req.body.name
-        let youtubeUrl = req.body.youtubeUrl
 
-        const newBlogger = await bloggersService.createBloggers(name, youtubeUrl)
-        res.status(201).send(newBlogger)
+bloggersRouter.post('/:bloggerId/post', authMiddleware, titleValidation, shortDescriptionValidation, contentValidation, inputValidationMiddleWare, async (req: Request, res: Response) => {
+    let blogger = await bloggersService.findBloggersById(+req.params.bloggerId)
+    if (!blogger) {
+        return res.status(400).send({errorsMessages: [{message: 'Invalid bloggerId', field: "bloggerId"}]})
+    } else {
+        const newPost = await postsService.createPost(
+            +req.params.id,
+            req.body.title,
+            req.body.shortDescription,
+            req.body.content,
+            +req.params.bloggerId)
+
+        res.status(201).send(newPost)
+    }
+})
+
+bloggersRouter.get('/:bloggerId/post', async (req: Request, res: Response) => {
+    const post = await postsService.findBloggersPost(+req.params.bloggerId)
+
+    if (post) {
+        res.send(post)
     } else {
         res.send(404)
     }
 })
-
-// bloggersRouter.post('/:bloggerId/post', authMiddleware, async (req: Request, res: Response) => {
-//     let blogger = await bloggersService.findBloggersById(+req.params.bloggerId)
-//     if (!blogger) {
-//         return res.status(400).send({errorsMessages: [{message: 'Invalid bloggerId', field: "bloggerId"}]})
-//     } else {
-//         const newPost = await postsService.createPost(
-//             +req.params.bloggerId,
-//             req.body.title,
-//             req.body.shortDescription,
-//             req.body.content,
-//             +req.params.bloggerId)
-//
-//         res.status(201).send(newPost)
-//     }
-// })
-
 

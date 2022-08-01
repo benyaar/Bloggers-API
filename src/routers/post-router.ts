@@ -6,9 +6,9 @@ import {bloggersService} from "../domain/bloggers-service";
 import {postsService} from "../domain/posts-service";
 
 
-const titleValidation = body('title').trim().isLength({min: 1, max: 30})
-const shortDescriptionValidation = body('shortDescription').trim().isLength({min: 1, max: 100})
-const contentValidation = body('content').trim().isLength({min: 1, max: 1000})
+export const titleValidation = body('title').trim().isLength({min: 1, max: 30})
+export const shortDescriptionValidation = body('shortDescription').trim().isLength({min: 1, max: 100})
+export const contentValidation = body('content').trim().isLength({min: 1, max: 1000})
 
 export const postsRouter = Router({})
 

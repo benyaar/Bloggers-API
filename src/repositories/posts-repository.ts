@@ -35,5 +35,8 @@ export const postsRepository = {
     },
     async getCount() {
         return await postsCollection.count({})
+    },
+    async findBloggersPost(bloggerId: number){
+        return await postsCollection.find({bloggerId: bloggerId}, options).toArray()
     }
 }

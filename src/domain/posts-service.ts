@@ -33,4 +33,7 @@ export const postsService = {
     async getCount() {
         return await postsRepository.getCount()
     },
+    async findBloggersPost(bloggerId:number) {
+        return await postsRepository.findBloggersPost(bloggerId)
+    },
 }
