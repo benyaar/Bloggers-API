@@ -73,7 +73,7 @@ bloggersRouter.delete('/:id', authMiddleware, async (req: Request, res: Response
 bloggersRouter.post('/:bloggerId/posts', authMiddleware, titleValidation, shortDescriptionValidation, contentValidation, inputValidationMiddleWare, async (req: Request, res: Response) => {
     let blogger = await bloggersService.findBloggersById(+req.params.bloggerId)
     if (!blogger) {
-        return res.status(400).send({errorsMessages: [{message: 'Invalid bloggerId', field: "bloggerId"}]})
+        return res.status(404).send({errorsMessages: [{message: 'Invalid bloggerId', field: "bloggerId"}]})
     } else {
         const newPost = await postsService.createPost(
             +req.params.id,
