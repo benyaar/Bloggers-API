@@ -2,7 +2,8 @@ import {bloggersRepository} from "../repositories/bloggers-repository";
 
 
 export const bloggersService = {
-    async findBloggers(pageSize:number, pageNumber:number, searchNameTerm:string) {
+    async findBloggers(pageSize:number, pageNumber:number, searchNameTerm:string | null) {
+
         return await bloggersRepository.findBloggers(pageSize, pageNumber, searchNameTerm)
     },
     async findBloggersById(id: number) {
@@ -24,7 +25,7 @@ export const bloggersService = {
     async deleteBloggers(id: number) {
         return await bloggersRepository.deleteBloggers(id)
     },
-    async getCount(searchNameTerm:string) {
+    async getCount(searchNameTerm:string | null) {
         return await bloggersRepository.getCount(searchNameTerm)
     },
 

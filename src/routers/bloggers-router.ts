@@ -17,14 +17,16 @@ bloggersRouter.get('/', async (req: Request, res: Response) => {
 
     const pageSize: number = Number(req.query.PageSize) || 10
     const pageNumber: number = Number(req.query.PageNumber) || 1
-    const searchNameTerm: string = toString(req.query.SearchNameTerm)
+    const searchNameTerm = typeof req.query.SearchNameTerm === 'string'
+        ? req.query.SearchNameTerm
+        : null
 
 
-    const foundBloggers = await bloggersService.findBloggers(pageSize, pageNumber, searchNameTerm)
+    const foundBloggers = await bloggersService.findBloggers(pageSize, pageNumber,searchNameTerm )
     const getCount = await bloggersService.getCount(searchNameTerm)
 
     res.send({
-        "pagesCount": Math.ceil(getCount / pageSize),
+        "pagesCount": Math.ceil(getCount/ pageSize),
         "page": pageNumber,
         "pageSize": pageSize,
         "totalCount": getCount,
@@ -70,22 +72,23 @@ bloggersRouter.delete('/:id', authMiddleware, async (req: Request, res: Response
 })
 
 
-bloggersRouter.post('/:bloggerId/post', authMiddleware, titleValidation, shortDescriptionValidation, contentValidation, inputValidationMiddleWare, async (req: Request, res: Response) => {
-
-    if (+req.params.bloggerId) {
+bloggersRouter.post('/:bloggerId/posts', authMiddleware, titleValidation, shortDescriptionValidation, contentValidation, inputValidationMiddleWare, async (req: Request, res: Response) => {
+    let blogger = await bloggersService.findBloggersById(+req.params.bloggerId)
+    if (!blogger) {
+        return res.status(400).send({errorsMessages: [{message: 'Invalid bloggerId', field: "bloggerId"}]})
+    } else {
         const newPost = await postsService.createPost(
             +req.params.id,
             req.body.title,
             req.body.shortDescription,
             req.body.content,
             +req.params.bloggerId)
+
         res.status(201).send(newPost)
-    } else {
-        return res.status(400).send({errorsMessages: [{message: 'Invalid bloggerId', field: "bloggerId"}]})
     }
 })
 
-bloggersRouter.get('/:bloggerId/post', async (req: Request, res: Response) => {
+bloggersRouter.get('/:bloggerId/posts', async (req: Request, res: Response) => {
     const post = await postsService.findBloggersPost(+req.params.bloggerId)
 
     if (post) {

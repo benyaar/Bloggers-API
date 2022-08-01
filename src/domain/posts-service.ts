@@ -20,7 +20,7 @@ export const postsService = {
             bloggerName: "Brendan Eich"
         }
 
-        // @ts-ignore
+
         return await postsRepository.createPost(newPosts)
 
     },

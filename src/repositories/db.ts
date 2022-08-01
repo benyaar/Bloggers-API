@@ -1,12 +1,14 @@
-import {MongoClient} from "mongodb";
+import {MongoClient, ObjectId, WithId} from "mongodb";
 
 
 export type BloggersType = {
     id: number
     name: string
     youtubeUrl: string
-    _id:string
 }
+
+type BloggerBDType = WithId<BloggersType>
+
 export type PostsType = {
     id: number
     title: string
