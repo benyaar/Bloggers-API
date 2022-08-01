@@ -7,7 +7,7 @@ const options = {
 }
 
 export const bloggersRepository = {
-    async findBloggers(pageSize:number, pageNumber:number, searchNameTerm:string | null) {
+    async findBloggers(pageSize:number, pageNumber:number, searchNameTerm:string) {
         let filter = {}
 
         if(searchNameTerm) {
@@ -47,7 +47,7 @@ export const bloggersRepository = {
         const result = await bloggersCollection.deleteOne({id: id})
         return result.deletedCount === 1
     },
-    async getCount(searchNameTerm: string | null) {
+    async getCount(searchNameTerm: string) {
         return await bloggersCollection.countDocuments({name: {$regex: searchNameTerm}})
     }
 

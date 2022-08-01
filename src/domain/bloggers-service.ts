@@ -2,7 +2,7 @@ import {bloggersRepository} from "../repositories/bloggers-repository";
 
 
 export const bloggersService = {
-    async findBloggers(pageSize:number, pageNumber:number, searchNameTerm:string | null) {
+    async findBloggers(pageSize:number, pageNumber:number, searchNameTerm:string) {
 
         return await bloggersRepository.findBloggers(pageSize, pageNumber, searchNameTerm)
     },
@@ -16,7 +16,7 @@ export const bloggersService = {
             name: name,
             youtubeUrl: youtubeUrl,
         }
-        // @ts-ignore
+
         return await bloggersRepository.createBloggers(newBlogger)
     },
     async updateBlogger(id: number, name: string, youtubeUrl: string) {
@@ -25,7 +25,7 @@ export const bloggersService = {
     async deleteBloggers(id: number) {
         return await bloggersRepository.deleteBloggers(id)
     },
-    async getCount(searchNameTerm:string | null) {
+    async getCount(searchNameTerm:string) {
         return await bloggersRepository.getCount(searchNameTerm)
     },
 

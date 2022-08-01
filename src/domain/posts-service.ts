@@ -19,8 +19,6 @@ export const postsService = {
             bloggerId: bloggerId,
             bloggerName: "Brendan Eich"
         }
-
-
         return await postsRepository.createPost(newPosts)
 
     },

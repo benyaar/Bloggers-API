@@ -17,9 +17,7 @@ bloggersRouter.get('/', async (req: Request, res: Response) => {
 
     const pageSize: number = Number(req.query.PageSize) || 10
     const pageNumber: number = Number(req.query.PageNumber) || 1
-    const searchNameTerm = typeof req.query.SearchNameTerm === 'string'
-        ? req.query.SearchNameTerm
-        : null
+    const searchNameTerm = toString(req.query.SearchNameTerm)
 
 
     const foundBloggers = await bloggersService.findBloggers(pageSize, pageNumber,searchNameTerm )
