@@ -8,13 +8,7 @@ const options = {
 
 export const bloggersRepository = {
     async findBloggers(pageSize:number, pageNumber:number, searchNameTerm:string) {
-        let filter = {}
-
-        if(searchNameTerm) {
-            filter = {$regex: searchNameTerm}
-        }
-
-        return await bloggersCollection.find({name: filter}, options).skip((pageNumber-1)*pageSize).limit(pageSize).toArray()
+        return await bloggersCollection.find({name: {$regex: searchNameTerm}}, options).skip((pageNumber-1)*pageSize).limit(pageSize).toArray()
     },
 
 
