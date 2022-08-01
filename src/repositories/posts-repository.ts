@@ -38,7 +38,10 @@ export const postsRepository = {
     async getCount() {
         return await postsCollection.count({})
     },
-    async findBloggersPost(bloggerId: number){
-        return await postsCollection.find({bloggerId: bloggerId}, options).toArray()
-    }
+    async findBloggersPost(pageSize:number, pageNumber:number, bloggerId: number){
+        return await postsCollection.find({bloggerId: bloggerId}, options).skip((pageNumber-1)*pageSize).limit(pageSize).toArray()
+    },
+    async getCountBloggerId(bloggerId: number) {
+        return await postsCollection.count({bloggerId: bloggerId})
+    },
 }

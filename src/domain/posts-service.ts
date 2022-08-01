@@ -1,11 +1,13 @@
 import {postsRepository} from "../repositories/posts-repository";
+import {postsCollection} from "../repositories/db";
+import {isNumberObject} from "util/types";
 
 
 
 
 export const postsService = {
     async findPosts(pageSize:number, pageNumber:number) {
-        return await postsRepository.findPosts(pageSize, pageNumber)
+        return await postsRepository.findPosts(pageSize, pageNumber )
     },
     async findPostById(id: number) {
         return await postsRepository.findPostById(id)
@@ -31,7 +33,10 @@ export const postsService = {
     async getCount() {
         return await postsRepository.getCount()
     },
-    async findBloggersPost(bloggerId:number) {
-        return await postsRepository.findBloggersPost(bloggerId)
+    async findBloggersPost(pageSize:number, pageNumber:number,bloggerId:number) {
+        return await postsRepository.findBloggersPost(pageSize, pageNumber, bloggerId)
+    },
+    async getCountBloggerId(bloggerId: number) {
+        return await postsRepository.getCountBloggerId(bloggerId)
     },
 }
