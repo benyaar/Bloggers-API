@@ -86,11 +86,23 @@ bloggersRouter.post('/:bloggerId/posts', authMiddleware, titleValidation, shortD
     }
 })
 
-bloggersRouter.get('/:bloggerId/posts', async (req: Request, res: Response) => {
+bloggersRouter.get('/:bloggerId/posts',async (req: Request, res: Response) => {
     const post = await postsService.findBloggersPost(+req.params.bloggerId)
 
-    if (post) {
-        res.send(post)
+    if (post.length > 0) {
+        const pageSize: number = Number(req.query.PageSize) || 10
+        const pageNumber: number = Number(req.query.PageNumber) || 1
+
+
+        const findPost = await postsService.findPosts(pageSize, pageNumber)
+        const getCount = await postsService.getCount()
+        res.send({
+            "pagesCount": Math.ceil(getCount/ pageSize),
+            "page": pageNumber,
+            "pageSize": pageSize,
+            "totalCount": getCount,
+            "items": findPost
+        })
     } else {
         res.send(404)
     }
