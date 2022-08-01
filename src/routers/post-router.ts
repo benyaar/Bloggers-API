@@ -18,7 +18,7 @@ postsRouter.get('/', async (req: Request, res: Response) => {
     const pageNumber: number = Number(req.query.PageNumber) || 1
 
 
-    const findPost = await postsService.findPosts()
+    const findPost = await postsService.findPosts(pageNumber, pageSize)
     const getCount = await postsService.getCount()
     res.send({
         "pagesCount": Math.ceil(getCount/ pageSize),

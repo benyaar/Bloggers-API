@@ -3,8 +3,8 @@ import {postsRepository} from "../repositories/posts-repository";
 
 
 export const postsService = {
-    async findPosts() {
-        return await postsRepository.findPosts()
+    async findPosts(pageNumber: number, pageSize: number) {
+        return await postsRepository.findPosts(pageNumber, pageSize)
     },
     async findPostById(id: number) {
         return await postsRepository.findPostById(id)
