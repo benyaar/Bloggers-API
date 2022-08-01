@@ -6,7 +6,7 @@ const options = {
     }
 }
 export const postsRepository = {
-    async findPosts(pageSize: number, pageNumber: number) {
+    async findPosts(pageSize:number, pageNumber:number) {
         return await postsCollection.find({}, options).skip((pageNumber-1)*pageSize).limit(pageSize).toArray()
     },
     async findPostById(id: number) {

@@ -4,6 +4,7 @@ import {body} from "express-validator";
 import {inputValidationMiddleWare} from "../middleWare/inputValidation";
 import {authMiddleware} from "../middleWare/authValidation";
 import {toString} from "express-validator/src/utils";
+import {postsService} from "../domain/posts-service";
 
 export const bloggersRouter = Router({})
 
@@ -66,3 +67,34 @@ bloggersRouter.delete('/:id', authMiddleware, async (req: Request, res: Response
         res.send(404)
     }
 })
+
+bloggersRouter.post('/:bloggerId/post', authMiddleware, async (req: Request, res: Response) => {
+    const bloggerId = await bloggersService.findBloggersById(+req.params.bloggerId)
+    if (bloggerId) {
+        let name = req.body.name
+        let youtubeUrl = req.body.youtubeUrl
+
+        const newBlogger = await bloggersService.createBloggers(name, youtubeUrl)
+        res.status(201).send(newBlogger)
+    } else {
+        res.send(404)
+    }
+})
+
+// bloggersRouter.post('/:bloggerId/post', authMiddleware, async (req: Request, res: Response) => {
+//     let blogger = await bloggersService.findBloggersById(+req.params.bloggerId)
+//     if (!blogger) {
+//         return res.status(400).send({errorsMessages: [{message: 'Invalid bloggerId', field: "bloggerId"}]})
+//     } else {
+//         const newPost = await postsService.createPost(
+//             +req.params.bloggerId,
+//             req.body.title,
+//             req.body.shortDescription,
+//             req.body.content,
+//             +req.params.bloggerId)
+//
+//         res.status(201).send(newPost)
+//     }
+// })
+
+

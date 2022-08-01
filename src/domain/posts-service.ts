@@ -2,9 +2,10 @@ import {postsRepository} from "../repositories/posts-repository";
 
 
 
+
 export const postsService = {
-    async findPosts(pageNumber: number, pageSize: number) {
-        return await postsRepository.findPosts(pageNumber, pageSize)
+    async findPosts(pageSize:number, pageNumber:number) {
+        return await postsRepository.findPosts(pageSize, pageNumber)
     },
     async findPostById(id: number) {
         return await postsRepository.findPostById(id)
@@ -18,6 +19,7 @@ export const postsService = {
             bloggerId: bloggerId,
             bloggerName: "Brendan Eich"
         }
+
         // @ts-ignore
         return await postsRepository.createPost(newPosts)
 
