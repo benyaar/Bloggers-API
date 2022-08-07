@@ -1,6 +1,7 @@
 import {postsRepository} from "../repositories/posts-repository";
 import {postsCollection} from "../repositories/db";
 import {isNumberObject} from "util/types";
+import {ObjectId} from "mongodb";
 
 
 
@@ -14,7 +15,7 @@ export const postsService = {
     },
     async createPost(id: number, title: string, shortDescription: string, content: string, bloggerId: number) {
         const newPosts = {
-            id: +(new Date()),
+            id: new ObjectId().toString(),
             title: title,
             shortDescription: shortDescription,
             content: content,

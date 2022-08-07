@@ -1,4 +1,5 @@
 import {bloggersRepository} from "../repositories/bloggers-repository";
+import {ObjectId} from "mongodb";
 
 
 export const bloggersService = {
@@ -12,7 +13,7 @@ export const bloggersService = {
     },
     async createBloggers(name: string, youtubeUrl: string) {
         const newBlogger = {
-            id: +(new Date()),
+            id: new ObjectId().toString(),
             name: name,
             youtubeUrl: youtubeUrl,
         }

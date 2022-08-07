@@ -2,13 +2,13 @@ import {MongoClient, ObjectId, WithId} from "mongodb";
 
 
 export type BloggersType = {
-    id: number
+    id: string
     name: string
     youtubeUrl: string
 }
 
 export type PostsType = {
-    id: number
+    id: string
     title: string
     shortDescription: string
     content: string
