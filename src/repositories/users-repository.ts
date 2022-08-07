@@ -9,10 +9,10 @@ const options = {
 export const usersRepository = {
 
     async createUser(newUser: UsersType) {
-        const result =  await usersCollection.insertOne(newUser)
-        const {login} = newUser
+     await usersCollection.insertOne(newUser)
+        const {id, login} = newUser
         return{
-            id:result.insertedId, login
+            id, login
         }
     },
     async findUsers(pageSize:number, pageNumber:number) {
