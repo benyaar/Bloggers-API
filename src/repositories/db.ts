@@ -1,4 +1,4 @@
-import {MongoClient, ObjectId, WithId} from "mongodb";
+import {MongoClient} from "mongodb";
 
 
 export type BloggersType = {
@@ -12,7 +12,7 @@ export type PostsType = {
     title: string
     shortDescription: string
     content: string
-    bloggerId: number
+    bloggerId: string
     bloggerName: string
 }
 export type UsersType = {

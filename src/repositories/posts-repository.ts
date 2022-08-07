@@ -9,7 +9,7 @@ export const postsRepository = {
     async findPosts(pageSize:number, pageNumber:number) {
         return await postsCollection.find({}, options).skip((pageNumber-1)*pageSize).limit(pageSize).toArray()
     },
-    async findPostById(id: number) {
+    async findPostById(id: string) {
         return await postsCollection.findOne({id: id}, options)
     },
     async createPost(newPosts: PostsType) {
@@ -19,7 +19,7 @@ export const postsRepository = {
             id, title, shortDescription, content, bloggerId, bloggerName
         }
     },
-    async updatePost(id: number, title: string, shortDescription: string, content: string, bloggerId: number) {
+    async updatePost(id: string, title: string, shortDescription: string, content: string, bloggerId: string) {
         const result = await postsCollection.updateOne({id: id}, {
             $set: {
                 title: title,
@@ -30,7 +30,7 @@ export const postsRepository = {
         })
         return result.matchedCount === 1
     },
-    async deletePosts(id: number) {
+    async deletePosts(id: string) {
 
         const result = await postsCollection.deleteOne({id: id})
         return result.deletedCount === 1
@@ -38,10 +38,10 @@ export const postsRepository = {
     async getCount() {
         return await postsCollection.count({})
     },
-    async findBloggersPost(pageSize:number, pageNumber:number, bloggerId: number){
+    async findBloggersPost(pageSize:number, pageNumber:number, bloggerId: string){
         return await postsCollection.find({bloggerId: bloggerId}, options).skip((pageNumber-1)*pageSize).limit(pageSize).toArray()
     },
-    async getCountBloggerId(bloggerId: number) {
+    async getCountBloggerId(bloggerId: string) {
         return await postsCollection.count({bloggerId: bloggerId})
     },
 }

@@ -33,7 +33,7 @@ postsRouter.post('/', authMiddleware, titleValidation, shortDescriptionValidatio
         return res.status(400).send({errorsMessages: [{message: 'Invalid bloggerId', field: "bloggerId"}]})
     } else {
         const newPost = await postsService.createPost(
-            +req.params.id,
+            req.params.id,
             req.body.title,
             req.body.shortDescription,
             req.body.content,
@@ -43,7 +43,7 @@ postsRouter.post('/', authMiddleware, titleValidation, shortDescriptionValidatio
     }
 })
 postsRouter.get('/:id', async (req: Request, res: Response) => {
-    const post = await postsService.findPostById(+req.params.id)
+    const post = await postsService.findPostById(req.params.id)
 
     if (post) {
         res.send(post)
@@ -57,13 +57,13 @@ postsRouter.put('/:id', authMiddleware, titleValidation, shortDescriptionValidat
     if (!blogger) {
         return res.status(400).send({errorsMessages: [{message: 'Invalid bloggerId', field: "bloggerId"}]})
     } else {
-        const isUpdate = await postsService.updatePost(+req.params.id,
+        const isUpdate = await postsService.updatePost(req.params.id,
             req.body.title,
             req.body.shortDescription,
             req.body.content,
             req.body.bloggerId)
         if (isUpdate) {
-            const post = await postsService.findPostById(+req.params.id)
+            const post = await postsService.findPostById(req.params.id)
             res.status(204).send({post})
         } else {
             res.send(404)
@@ -72,7 +72,7 @@ postsRouter.put('/:id', authMiddleware, titleValidation, shortDescriptionValidat
 
 })
 postsRouter.delete('/:id', authMiddleware, async (req: Request, res: Response) => {
-    const isDeleted = await postsService.deletePosts(+req.params.id)
+    const isDeleted = await postsService.deletePosts(req.params.id)
     if (isDeleted) {
         res.send(204)
     } else {
