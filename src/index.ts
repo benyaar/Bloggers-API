@@ -4,6 +4,7 @@ import {bloggersRouter} from "./routers/bloggers-router";
 import {postsRouter} from "./routers/post-router";
 import {runDb} from "./repositories/db";
 import cors from 'cors'
+import {usersRouter} from "./routers/user-router";
 
 
 const app = express()
@@ -18,6 +19,8 @@ app.use(parserMiddleware)
 app.use('/bloggers', bloggersRouter)
 
 app.use('/posts', postsRouter)
+
+app.use('/users', usersRouter)
 
 const  startApp = async () => {
     await runDb()

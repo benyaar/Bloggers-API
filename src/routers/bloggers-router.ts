@@ -1,17 +1,16 @@
 import {Request, Response, Router} from "express";
 import {bloggersService} from "../domain/bloggers-service";
-import {body} from "express-validator";
 import {inputValidationMiddleWare} from "../middleWare/inputValidation";
 import {authMiddleware} from "../middleWare/authValidation";
 import {toString} from "express-validator/src/utils";
 import {postsService} from "../domain/posts-service";
-import {contentValidation, shortDescriptionValidation, titleValidation} from "./post-router";
+import {nameValidation, urlValidation, contentValidation, shortDescriptionValidation, titleValidation} from "../validators/validators";
+
 
 export const bloggersRouter = Router({})
 
 
-const nameValidation = body('name').trim().isLength({min: 1, max: 15}).trim()
-const urlValidation = body('youtubeUrl').isURL().trim().isLength({min: 10, max: 100})
+
 
 bloggersRouter.get('/', async (req: Request, res: Response) => {
 
