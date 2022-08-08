@@ -15,9 +15,7 @@ export const usersRouter = Router({})
 
 
 usersRouter.post('/', authMiddleware, loginValidation, inputValidationMiddleWare, async (req: Request, res: Response) => {
-    let login = req.body.login
-
-    const newUser = await usersService.createUser(login)
+    const newUser = await usersService.createUser(req.body.login, req.body.password)
     res.status(201).send(newUser)
 
 })

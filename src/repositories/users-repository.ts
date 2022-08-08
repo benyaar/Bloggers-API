@@ -3,7 +3,9 @@ import { usersCollection, UsersType} from "./db";
 const options = {
     projection: {
         _id: 0,
-    }
+        passwordHash: 0,
+        passwordSalt: 0
+    },
 }
 
 export const usersRepository = {
@@ -21,8 +23,11 @@ export const usersRepository = {
     async getCount(){
         return await usersCollection.countDocuments()
     },
-    async deleteBloggers(id:string){
+    async deleteUsers(id:string){
         const result = await usersCollection.deleteOne({id: id})
         return result.deletedCount === 1
+    },
+    async findLogin(login:string){
+        return await usersCollection.findOne({login: login})
     }
 }

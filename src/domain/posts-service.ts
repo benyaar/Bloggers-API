@@ -1,6 +1,4 @@
 import {postsRepository} from "../repositories/posts-repository";
-import {postsCollection} from "../repositories/db";
-import {isNumberObject} from "util/types";
 import {ObjectId} from "mongodb";
 
 

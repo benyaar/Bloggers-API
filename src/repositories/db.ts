@@ -18,6 +18,8 @@ export type PostsType = {
 export type UsersType = {
     id: string
     login:string
+    passwordHash: string
+    passwordSalt: string
 }
 
 const mongoUri = process.env.mongoURI || "mongodb+srv://admin:admin@cluster0.9zvor.mongodb.net/bloggersList?retryWrites=true&w=majority"
