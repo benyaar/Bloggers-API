@@ -89,7 +89,7 @@ postsRouter.post('/:postId/comments', commentValidation, inputValidationMiddleWa
 
     if (post) {
        const newComment = await commentService.createComment(req.body.content, req.user!.id, req.user!.login)
-        res.status(200).send(newComment)
+        res.status(201).send(newComment)
     } else {
         res.send(404)
     }
