@@ -12,6 +12,8 @@ export const commentService = {
             addedAt: new Date()
         }
         return await commentRepository.createComment(newComment)
-
+    },
+    async findComment (id: string){
+        return await commentRepository.findComment(id)
     }
 }

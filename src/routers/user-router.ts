@@ -6,10 +6,6 @@ import {inputValidationMiddleWare} from "../middleWare/inputValidation";
 import {authMiddleware} from "../middleWare/authValidation";
 
 
-
-
-
-
 export const usersRouter = Router({})
 
 
