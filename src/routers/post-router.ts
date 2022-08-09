@@ -1,11 +1,15 @@
 import {Request, Response, Router} from "express";
 import {inputValidationMiddleWare} from "../middleWare/inputValidation";
-import {authMiddleware} from "../middleWare/authValidation";
+import {authMiddleware, authMiddlewareBearer} from "../middleWare/authValidation";
 import {bloggersService} from "../domain/bloggers-service";
 import {postsService} from "../domain/posts-service";
-import {contentValidation, shortDescriptionValidation, titleValidation} from "../validators/validators";
-
-
+import {
+    commentValidation,
+    contentValidation,
+    shortDescriptionValidation,
+    titleValidation
+} from "../validators/validators";
+import {commentService} from "../domain/comment-service";
 
 
 export const postsRouter = Router({})
@@ -19,7 +23,7 @@ postsRouter.get('/', async (req: Request, res: Response) => {
     const findPost = await postsService.findPosts(pageSize, pageNumber)
     const getCount = await postsService.getCount()
     res.send({
-        "pagesCount": Math.ceil(getCount/ pageSize),
+        "pagesCount": Math.ceil(getCount / pageSize),
         "page": pageNumber,
         "pageSize": pageSize,
         "totalCount": getCount,
@@ -79,3 +83,15 @@ postsRouter.delete('/:id', authMiddleware, async (req: Request, res: Response) =
         res.send(404)
     }
 })
+
+postsRouter.post('/:postId/comments', commentValidation, inputValidationMiddleWare, authMiddlewareBearer, async (req: Request, res: Response) => {
+    const post = await postsService.findPostById(req.params.postId)
+
+    if (post) {
+       const newComment = await commentService.createComment(req.body.content, req.user!.id, req.user!.login)
+        res.status(200).send(newComment)
+    } else {
+        res.send(404)
+    }
+    }
+)

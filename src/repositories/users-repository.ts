@@ -1,5 +1,6 @@
 import { usersCollection, UsersType} from "./db";
 
+
 const options = {
     projection: {
         _id: 0,
@@ -29,5 +30,8 @@ export const usersRepository = {
     },
     async findLogin(login:string){
         return await usersCollection.findOne({login: login})
+    },
+    async findUsersById(userId:string){
+        return await usersCollection.findOne({id: userId})
     }
 }

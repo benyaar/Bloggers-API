@@ -1,4 +1,6 @@
 import {NextFunction, Request, Response} from "express";
+import {jwtService} from "../applicatioon/jwt-service";
+import {usersService} from "../domain/users-Service";
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const header = req.headers.authorization
 
@@ -7,5 +9,20 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
         return
     }
     res.send(401)
+}
 
+export const authMiddlewareBearer = async (req: Request, res: Response, next: NextFunction) => {
+    if(!req.headers.authorization){
+        res.sendStatus(404)
+        return
+    }
+    const token = req.headers.authorization.split(' ')[1]
+     const userId = await jwtService.getUserIdByToken(token)
+    if(userId){
+        req.user = await usersService.findUsersById(userId)
+    } else{
+        res.sendStatus(401)
+
+    }
+    next()
 }
