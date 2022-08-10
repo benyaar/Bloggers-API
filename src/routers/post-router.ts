@@ -113,7 +113,6 @@ postsRouter.get('/:postId/comments', async (req: Request, res: Response) => {
         }
         res.send(result)
     } else {
-
         res.sendStatus(404)
     }
 
