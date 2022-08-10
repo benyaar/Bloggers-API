@@ -12,3 +12,7 @@ commentsRouter.get('/:id', async (req: Request, res: Response) => {
     }
 
 })
+commentsRouter.delete('id',async (req: Request, res: Response) => {
+
+
+})
