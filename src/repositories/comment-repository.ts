@@ -33,6 +33,7 @@ export const commentRepository = {
                 content: content,
             }
         })
+        return result.matchedCount === 1
 
     }
 }
