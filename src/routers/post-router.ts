@@ -85,33 +85,36 @@ postsRouter.delete('/:id', authMiddleware, async (req: Request, res: Response) =
 })
 
 postsRouter.post('/:postId/comments', commentValidation, inputValidationMiddleWare, authMiddlewareBearer, async (req: Request, res: Response) => {
-    const post = await postsService.findPostById(req.params.postId)
+        const post = await postsService.findPostById(req.params.postId)
 
-    if (post) {
-       const newComment = await commentService.createComment(req.body.content, req.user!.id, req.user!.login,req.params.postId)
-        res.status(201).send(newComment)
-    } else {
-        res.send(404)
-    }
+        if (post) {
+            const newComment = await commentService.createComment(req.body.content, req.user!.id, req.user!.login, req.params.postId)
+            res.status(201).send(newComment)
+        } else {
+            res.send(404)
+        }
     }
 )
 postsRouter.get('/:postId/comments', async (req: Request, res: Response) => {
     const pageSize: number = Number(req.query.PageSize) || 10
     const pageNumber: number = Number(req.query.PageNumber) || 1
-    const findComment = await commentService.findCommentWithPag(req.params.postId,pageSize, pageNumber)
-    const getCount = await commentService.getCount(req.params.postId)
-    const result = {
-        "pagesCount": Math.ceil(getCount / pageSize),
-        "page": pageNumber,
-        "pageSize": pageSize,
-        "totalCount": getCount,
-        "items": findComment
-    }
-    if(findComment.length < 1){
-        res.sendStatus(404)
-    } else
-        res.send(result)
 
+    const findPost = await postsService.findPostById(req.params.postId)
+    if (findPost) {
+        const findComment = await commentService.findCommentWithPag(req.params.postId, pageSize, pageNumber)
+        const getCount = await commentService.getCount(req.params.postId)
+        const result = {
+            "pagesCount": Math.ceil(getCount / pageSize),
+            "page": pageNumber,
+            "pageSize": pageSize,
+            "totalCount": getCount,
+            "items": findComment
+        }
+        res.send(result)
+    } else {
+
+        res.sendStatus(400)
+    }
 
 
 })

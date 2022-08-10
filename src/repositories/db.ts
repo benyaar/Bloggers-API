@@ -23,7 +23,7 @@ export type UsersType = {
 }
 export type CommentsType = {
     id: string
-    comment:string
+    content:string
 }
 
 const mongoUri = process.env.mongoURI || "mongodb+srv://admin:admin@cluster0.9zvor.mongodb.net/bloggersList?retryWrites=true&w=majority"

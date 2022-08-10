@@ -1,4 +1,4 @@
-import {commentsCollection} from "./db";
+import {commentsCollection, postsCollection} from "./db";
 
 const options = {
     projection: {
@@ -27,4 +27,12 @@ export const commentRepository = {
         const result = await commentsCollection.deleteOne({id: id})
         return result.deletedCount === 1
     },
+    async updateComment(content:string, id:string ){
+        const result = await commentsCollection.updateOne({id: id}, {
+            $set: {
+                content: content,
+            }
+        })
+
+    }
 }
