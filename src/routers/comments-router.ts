@@ -1,5 +1,6 @@
 import {Request, Response, Router} from "express";
 import {commentService} from "../domain/comment-service";
+import {authMiddlewareBearer} from "../middleWare/authValidation";
 
 export const commentsRouter = Router({})
 
@@ -12,7 +13,13 @@ commentsRouter.get('/:id', async (req: Request, res: Response) => {
     }
 
 })
-commentsRouter.delete('id',async (req: Request, res: Response) => {
+commentsRouter.delete('/:id', authMiddlewareBearer, async (req: Request, res: Response) => {
+    const isDeleted = await commentService.deleteComment(req.params.id)
+    if (isDeleted) {
+        res.send(204)
+    } else {
+        res.send(404)
+    }
 
 
 })

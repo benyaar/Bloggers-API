@@ -22,5 +22,8 @@ export const commentService = {
     },
     async getCount(postId:string){
         return await commentRepository.getCount(postId)
+    },
+    async deleteComment(id:string){
+        return await commentRepository.deleteComment(id)
     }
 }

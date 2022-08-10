@@ -21,5 +21,10 @@ export const commentRepository = {
     },
     async getCount(postId:string){
         return await commentsCollection.count({postId: postId})
-    }
+    },
+    async deleteComment(id: string) {
+
+        const result = await commentsCollection.deleteOne({id: id})
+        return result.deletedCount === 1
+    },
 }
