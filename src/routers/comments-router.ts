@@ -30,7 +30,7 @@ commentsRouter.put('/:commentId', commentValidation, inputValidationMiddleWare, 
 
     let comment = await commentService.findComment(req.params.commentId)
     if (!comment) {
-        return res.status(400).send({errorsMessages: [{message: 'Invalid comment', field: "comment"}]})
+        return res.status(404).send({errorsMessages: [{message: 'Invalid comment', field: "comment"}]})
     } else {
         const isUpdate = await commentService.updateComment(req.body.content, req.params.commentId)
         if (isUpdate) {
