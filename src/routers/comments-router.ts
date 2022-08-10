@@ -26,7 +26,7 @@ commentsRouter.delete('/:id', authMiddlewareBearer, async (req: Request, res: Re
         res.send(404)
     }
 })
-commentsRouter.put('/:commentId', commentValidation, inputValidationMiddleWare, authMiddlewareBearer, async (req: Request, res: Response) => {
+commentsRouter.put('/:commentId',authMiddlewareBearer, commentValidation, inputValidationMiddleWare, async (req: Request, res: Response) => {
 
     let comment = await commentService.findComment(req.params.commentId)
     if (!comment) {
