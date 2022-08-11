@@ -9,7 +9,6 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
         return
     }
     res.send(401)
-
 }
 
 export const authMiddlewareBearer = async (req: Request, res: Response, next: NextFunction) => {
@@ -22,8 +21,11 @@ export const authMiddlewareBearer = async (req: Request, res: Response, next: Ne
     if(userId){
         req.user = await usersService.findUsersById(userId)
         next()
+    } else {
+        res.sendStatus(401)
+
     }
-    res.sendStatus(401)
+
 
 
 
