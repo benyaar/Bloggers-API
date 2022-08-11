@@ -84,7 +84,7 @@ postsRouter.delete('/:id', authMiddleware, async (req: Request, res: Response) =
     }
 })
 
-postsRouter.post('/:postId/comments', commentValidation, inputValidationMiddleWare, authMiddlewareBearer, async (req: Request, res: Response) => {
+postsRouter.post('/:postId/comments', authMiddlewareBearer, commentValidation, inputValidationMiddleWare, async (req: Request, res: Response) => {
         const post = await postsService.findPostById(req.params.postId)
 
         if (post) {
