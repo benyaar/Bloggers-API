@@ -13,7 +13,7 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
 
 export const authMiddlewareBearer = async (req: Request, res: Response, next: NextFunction) => {
     if(!req.headers.authorization){
-        res.sendStatus(401)
+        res.sendStatus(402)
         return
     }
     const token = req.headers.authorization.split(' ')[1]
@@ -25,7 +25,11 @@ export const authMiddlewareBearer = async (req: Request, res: Response, next: Ne
         res.sendStatus(401)
 
     }
+<<<<<<< HEAD
 
+=======
+    res.sendStatus(402)
+>>>>>>> f2adafda2d4bfa1e9e879bf425c557c8bd1dd9ab
 
 
 
