@@ -1,4 +1,4 @@
-import {commentsCollection, postsCollection} from "./db";
+import {commentsCollection} from "./db";
 
 const options = {
     projection: {
@@ -35,5 +35,9 @@ export const commentRepository = {
         })
         return result.matchedCount === 1
 
-    }
+    },
+    async findUser(userId:string, commentId: string){
+        return await commentsCollection.findOne({userId: userId, id:commentId})
+    },
+
 }

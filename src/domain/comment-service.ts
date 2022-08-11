@@ -28,6 +28,9 @@ export const commentService = {
     },
     async updateComment(content: string, id:string){
         return await commentRepository.updateComment(content, id)
-    }
+    },
+    async findUser(userId:string, commentId:string){
+        return await commentRepository.findUser(userId, commentId)
+    },
 
 }

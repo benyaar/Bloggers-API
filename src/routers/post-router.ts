@@ -52,7 +52,7 @@ postsRouter.get('/:id', async (req: Request, res: Response) => {
     if (post) {
         res.send(post)
     } else {
-        res.send(404)
+        res.sendStatus(404)
     }
 })
 postsRouter.put('/:id', authMiddleware, titleValidation, shortDescriptionValidation, contentValidation, inputValidationMiddleWare, async (req: Request, res: Response) => {
@@ -112,9 +112,6 @@ postsRouter.get('/:postId/comments', async (req: Request, res: Response) => {
         }
         res.send(result)
     } else {
-
         res.sendStatus(404)
     }
-
-
 })
