@@ -9,11 +9,11 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
         return
     }
     res.send(401)
+
 }
 
 export const authMiddlewareBearer = async (req: Request, res: Response, next: NextFunction) => {
     if(!req.headers.authorization){
-
         res.sendStatus(401)
         return
     }
@@ -21,9 +21,10 @@ export const authMiddlewareBearer = async (req: Request, res: Response, next: Ne
      const userId = await jwtService.getUserIdByToken(token)
     if(userId){
         req.user = await usersService.findUsersById(userId)
-    } else{
-        res.sendStatus(401)
-
+        next()
     }
-    next()
+    res.sendStatus(401)
+
+
+
 }
