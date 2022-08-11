@@ -22,7 +22,9 @@ commentsRouter.get('/:id', async (req: Request, res: Response) => {
 commentsRouter.delete('/:id', authMiddlewareBearer, async (req: Request, res: Response) => {
     let comment = await commentService.findComment(req.params.id)
     let user = await commentService.findUser(req.user!.id, req.params.id)
-    if (!comment) res.sendStatus(404)
+    if (!comment){
+        res.sendStatus(404)
+    }
 
     if(user){
         const isDeleted = await commentService.deleteComment(req.params.id)
