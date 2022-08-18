@@ -16,3 +16,8 @@ authRouter.post('/login',
             res.sendStatus(401)
         }
     })
+
+authRouter.post('/registration',
+    async (req:Request, res:Response) =>{
+      
+    })
