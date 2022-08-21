@@ -4,6 +4,7 @@ import {usersService} from "../domain/users-Service";
 import {jwtService} from "../applicatioon/jwt-service";
 import nodemailer from "nodemailer"
 import {authService} from "../domain/auth-service";
+import {emailValidation, loginValidation, passwordValidation} from "../validators/validators";
 
 
 
@@ -40,11 +41,8 @@ authRouter.post('/login',
 //
 //     })
 
-authRouter.post('/registration',
+authRouter.post('/registration', loginValidation, passwordValidation, emailValidation,
     async (req:Request, res:Response) =>{
-
             const newUser = await authService.createUser(req.body.login, req.body.email, req.body.password)
             res.sendStatus(204)
-
-
     })
