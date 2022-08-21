@@ -7,6 +7,7 @@ import cors from 'cors'
 import {usersRouter} from "./routers/user-router";
 import {authRouter} from "./routers/auth-Router";
 import {commentsRouter} from "./routers/comments-router";
+import {deleteAllRouter} from "./routers/deleteAll-router";
 
 
 const app = express()
@@ -25,6 +26,7 @@ app.use('/posts', postsRouter)
 app.use('/users', usersRouter)
 app.use ('/auth', authRouter)
 app.use ('/comments', commentsRouter)
+app.use ('/testing', deleteAllRouter)
 
 const  startApp = async () => {
     await runDb()

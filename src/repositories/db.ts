@@ -25,7 +25,13 @@ export type CommentsType = {
     id: string
     content:string
 }
-
+export type UsersDBType = {
+    id: string
+    login:string
+    email: string
+    passwordHash: string
+    passwordSalt: string
+}
 const mongoUri = process.env.mongoURI || "mongodb+srv://admin:admin@cluster0.9zvor.mongodb.net/bloggersList?retryWrites=true&w=majority"
 
 const client = new MongoClient(mongoUri)
