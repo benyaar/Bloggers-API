@@ -22,5 +22,8 @@ export const authService = {
     },
     async checkExistEmail (email:string){
         return await authRepository.checkExistEmail(email)
+    },
+    async checkExistLogin (login: string){
+        return await authRepository.checkExistLogin(login)
     }
  }
