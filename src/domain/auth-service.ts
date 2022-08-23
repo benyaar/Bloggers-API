@@ -20,4 +20,7 @@ export const authService = {
     async _generateHash(password: string, salt: string){
         return await bcrypt.hash(password, salt)
     },
+    async checkExistLoginOrEmail (login: string, email:string){
+        return await authRepository.checkExistLoginOrEmail(login, email)
+    }
  }

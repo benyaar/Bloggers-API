@@ -44,6 +44,11 @@ authRouter.post('/login',
 
 authRouter.post('/registration', loginValidation, passwordValidation, emailValidation, attemptsMiddleware,
     async (req:Request, res:Response) =>{
-             await authService.createUser(req.body.login, req.body.email, req.body.password)
+    const loginOrEmailExist = await authService.checkExistLoginOrEmail(req.body.login, req.body.email)
+        if (loginOrEmailExist.length === 0) {
+            await authService.createUser(req.body.login, req.body.email, req.body.password)
             res.sendStatus(204)
+        } else {
+            return res.status(400).send({errorsMessages: [{message: 'Invalid loginOrEmail', field: "loginOrEmail"}]})
+        }
     })
