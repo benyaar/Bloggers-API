@@ -48,8 +48,8 @@ authRouter.post('/registration', loginValidation, passwordValidation, emailValid
             from: '"Artur" <apitestblogger@gmail.com>', // sender address
             to: req.body.email, // list of receivers
             subject: "Confirm Email", // Subject line
-            html: "https://somesite.com/confirm-email?code=your_confirmation_code", // html body
+            html: "<div>https://somesite.com/confirm-email?code=your_confirmation_code</div>",
         });
-      
+
         res.sendStatus(204)
     })
