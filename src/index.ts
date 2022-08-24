@@ -27,6 +27,7 @@ app.use('/users', usersRouter)
 app.use ('/auth', authRouter)
 app.use ('/comments', commentsRouter)
 app.use ('/testing', deleteAllRouter)
+app.set('trust proxy', true)
 
 const  startApp = async () => {
     await runDb()

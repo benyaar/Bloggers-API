@@ -29,8 +29,14 @@ export type UsersDBType = {
     id: string
     login:string
     email: string
+    createdDat: Date
     passwordHash: string
     passwordSalt: string
+    emailConfirmation: {
+        confirmationCode: any
+        expirationDate: any
+        isConfirmed: boolean
+    }
 }
 
 export type AttemptType = {
