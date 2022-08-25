@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer"
 
-export const emailService  = {
+    export const emailService  = {
     async sendEmail(email: string, code: string) {
 
         let transport = nodemailer.createTransport({
@@ -19,5 +19,22 @@ export const emailService  = {
         });
         return
 
-    }
+    },
+        async resendEmail(email: string, subject: string, message: string) {
+            let transporter = nodemailer.createTransport({
+                service: "gmail",
+                auth: {
+                    user: "apitestblogger@gmail.com", // generated ethereal user
+                    pass: "lfommghhiouvpevu", // generated ethereal password
+                },
+            });
+            await transporter.sendMail({
+                from: '"Artur" <apitestblogger@gmail.com>',
+                to: email,
+                subject: subject,
+                html: message,
+            });
+
+            return
+        }
 }

@@ -47,9 +47,13 @@ export const authService = {
         const user = await authRepository.checkExistConfirmCode(code)
          if(!user) return false
 
-        if (user.emailConfirmation.expirationDate > new Date()) {
+        if (user.emailConfirmation.expirationDate > new Date() && !user.emailConfirmation.isConfirmed) {
              let result = await authRepository.updateConfirmation(user.id)
-            return result
+            if (result){
+                await  emailService.resendEmail(user.email, "Your email was confirmed", "Hello! Your email was confirmed")
+
+            }
+            return
         }
 
     }

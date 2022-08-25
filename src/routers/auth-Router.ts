@@ -46,7 +46,7 @@ authRouter.post('/registration-confirmation', attemptsMiddleware,
         if (result){
             res.sendStatus(204)
         } else {
-            res.sendStatus(400)
+            res.status(400).send({errorsMessages: [{message: "ErrorMessage", field: "code"}]})
         }
     })
 
