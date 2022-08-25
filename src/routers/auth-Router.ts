@@ -2,11 +2,11 @@ import {Request, Response, Router} from "express";
 
 import {usersService} from "../domain/users-Service";
 import {jwtService} from "../applicatioon/jwt-service";
-import nodemailer from "nodemailer"
 import {authService} from "../domain/auth-service";
 import {emailValidation, loginValidation, passwordValidation} from "../validators/validators";
 import {attemptsMiddleware} from "../middleWare/attemptsMiddleware";
 import {inputValidationMiddleWare} from "../middleWare/inputValidation";
+
 
 
 
@@ -28,7 +28,7 @@ authRouter.post('/registration', loginValidation, passwordValidation, emailValid
     const checkLoginExist = await authService.checkExistLogin(req.body.login)
         const checkEmailExist = await authService.checkExistEmail(req.body.email)
 
-        if (checkEmailExist.length !== 0) {
+        if (checkEmailExist) {
             return res.status(400).send({errorsMessages: [{message: 'Invalid email', field: "email"}]})
         }
         if(checkLoginExist.length !== 0){
@@ -50,24 +50,15 @@ authRouter.post('/registration-confirmation', attemptsMiddleware,
         }
     })
 
+authRouter.post('/registration-email-resending', emailValidation, inputValidationMiddleWare, attemptsMiddleware,
+    async (req:Request, res:Response) =>{
+        const user = await authService.checkExistEmail(req.body.email)
+        if(user === null || !user || user.emailConfirmation.isConfirmed  ) {
+            res.status(400).send({errorsMessages: [{message: "ErrorMessage", field: "email"}]})
+        } else  {
+            const result = await authService.resendingEmailConfirm(req.body.email)
+           res.sendStatus(204)
 
-// authRouter.post('/registration-email-resending',
-//     emailValidation, inputValidationMiddleWare, attemptsMiddleware,
-//     async (req: Request, res: Response) => {
-//
-//         const user = await authService.checkExistEmail(req.body.email)
-//
-//         if (user?.isConfirmed === true || !user) {
-//
-//             res.status(400).send({errorsMessages: [{message: "ErrorMessage", field: "email"}]})
-//         } else {
-//
-//             const result = await authService.resendingEmailConfirm(req.body.email)
-//             if (result) {
-//                 res.sendStatus(204)
-//             } else {
-//                 res.sendStatus(400)
-//             }
-//         }
-//
-//     })
+        }
+    })
+

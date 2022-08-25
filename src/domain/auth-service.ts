@@ -56,6 +56,27 @@ export const authService = {
             return
         }
 
-    }
+    },
+    async resendingEmailConfirm(email: string) {
+        const user = await authService.checkExistEmail(email)
+        if(user === null || !user ) return false
 
+        const newEmailConfirmation: any = {
+            id: user.id,
+            login: user.login,
+            email: email,
+            createdDat: new Date(),
+            emailConfirmation: {
+                confirmationCode: uuidv4(),
+                expirationDate: add(new Date(), {
+                    hours: 1,
+                    minutes: 3,
+                }),
+                isConfirmed: false,
+            }
+        }
+        await authRepository.updateUnconfirmedEmailData(newEmailConfirmation)
+        await emailService.sendEmail(email, newEmailConfirmation.emailConfirmation.confirmationCode)
+        return
+    },
  }

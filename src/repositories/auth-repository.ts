@@ -1,4 +1,4 @@
-import {usersCollection, UsersDBType, UsersType} from "./db";
+import {usersCollection, UsersDBType} from "./db";
 import {WithId} from "mongodb";
 
 export const authRepository = {
@@ -6,7 +6,7 @@ export const authRepository = {
         return await usersCollection.insertOne(newUser)
     },
     async checkExistEmail (email:string){
-         return await usersCollection.find({email: email}).toArray()
+         return await usersCollection.findOne({email: email})
     },
     async checkExistLogin (login: string){
         return await usersCollection.find({login: login}).toArray()
@@ -16,5 +16,12 @@ export const authRepository = {
     },
     async updateConfirmation (id:string){
          return await usersCollection.updateOne({id}, {$set: {'emailConfirmation.isConfirmed': true}})
+    },
+    async updateUnconfirmedEmailData(uptateEmailConfirm: UsersDBType){
+        return await usersCollection.updateOne({email: uptateEmailConfirm.email},{$set:
+                {'emailConfirmation.isConfirmed': uptateEmailConfirm.emailConfirmation.isConfirmed,
+                    'emailConfirmation.expirationDate':uptateEmailConfirm.emailConfirmation.expirationDate,
+                    'emailConfirmation.confirmationCode':uptateEmailConfirm.emailConfirmation.confirmationCode}})
+
     }
 }
