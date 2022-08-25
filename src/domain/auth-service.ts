@@ -6,6 +6,8 @@ import {v4 as uuidv4} from 'uuid'
 import add from 'date-fns/add'
 import {emailService} from "./email-service";
 
+
+
 export const authService = {
     async createUser (login: string,email:string, password: string){
 
@@ -40,5 +42,16 @@ export const authService = {
     },
     async checkExistLogin (login: string){
         return await authRepository.checkExistLogin(login)
+    },
+    async confirmEmail (code:string) {
+        const user = await authRepository.checkExistConfirmCode(code)
+         if(!user) return false
+
+        if (user.emailConfirmation.expirationDate > new Date()) {
+             let result = await authRepository.updateConfirmation(user.id)
+            return result
+        }
+
     }
+
  }

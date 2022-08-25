@@ -1,4 +1,4 @@
-import { usersCollection, UsersType} from "./db";
+import {usersCollection, UsersDBType, UsersType} from "./db";
 
 
 const options = {
@@ -11,7 +11,7 @@ const options = {
 
 export const usersRepository = {
 
-    async createUser(newUser: UsersType) {
+    async createUser(newUser: UsersDBType) {
      await usersCollection.insertOne(newUser)
         const {id, login} = newUser
         return{
