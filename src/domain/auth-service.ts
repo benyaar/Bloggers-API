@@ -51,7 +51,7 @@ export const authService = {
              let result = await authRepository.updateConfirmation(user.id)
             if (result){
                 await  emailService.resendEmail(user.email, "Your email was confirmed", "Hello! Your email was confirmed")
-
+                return true
             }
             return
         }
