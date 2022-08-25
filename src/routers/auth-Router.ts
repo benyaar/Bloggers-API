@@ -12,7 +12,7 @@ import {inputValidationMiddleWare} from "../middleWare/inputValidation";
 
 export const authRouter = Router({})
 
-authRouter.post('/login',
+authRouter.post('/login', attemptsMiddleware,
     async (req:Request, res:Response) =>{
     const user = await usersService.checkCredentials(req.body.login, req.body.password)
         if(user) {
