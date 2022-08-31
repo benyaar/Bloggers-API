@@ -16,8 +16,9 @@ authRouter.post('/login', attemptsMiddleware,
     async (req:Request, res:Response) =>{
     const user = await usersService.checkCredentials(req.body.login, req.body.password)
         if(user) {
-            const token = await jwtService.createJWT(user)
-            res.status(200).send({token: token})
+            const jwtTokenPair = await jwtService.createJWTPair(user)
+            res.cookie('refreshToken', jwtTokenPair.refreshToken, {httpOnly: true, secure: true})
+            res.status(200).send({accessToken: jwtTokenPair.accessToken})
         } else {
             res.sendStatus(401)
         }
