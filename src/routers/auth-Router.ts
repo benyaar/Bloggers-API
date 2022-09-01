@@ -6,6 +6,7 @@ import {authService} from "../domain/auth-service";
 import {emailValidation, loginValidation, passwordValidation} from "../validators/validators";
 import {attemptsMiddleware} from "../middleWare/attemptsMiddleware";
 import {inputValidationMiddleWare} from "../middleWare/inputValidation";
+import {authMiddlewareBearer} from "../middleWare/authValidation";
 
 
 
@@ -79,4 +80,24 @@ authRouter.post('/refresh-token', async (req: Request, res: Response) => {
     const jwtTokenPair = await jwtService.createJWTPair(userId)
     res.cookie('refreshToken', jwtTokenPair.refreshToken, {httpOnly: true, secure: true})
     res.status(200).send({accessToken: jwtTokenPair.accessToken})
+    })
+
+authRouter.get('/me', authMiddlewareBearer,
+    async (req: Request, res: Response) => {
+        const header = req.headers.authorization
+        if (!header) return res.sendStatus(401)
+
+        const token = header!.split(' ')[1]
+        const userId = await jwtService.getUserIdByToken(token)
+        const user = await usersService.findUsersById(userId)
+
+        if (user) {
+            res.status(200).send({
+                email: user.email,
+                login: user.login,
+                userId: user.id,
+            })
+        } else {
+            res.sendStatus(401)
+        }
     })
