@@ -18,12 +18,10 @@ export const jwtService = {
         }
     },
     async createJWTPair (user:UsersDBType) {
-        const accessToken = jwt
-            .sign({userId: user.id},
-                process.env.JWT_SECRET || '123', {expiresIn: '10s'})
-        const refreshToken = jwt
-            .sign({userId: user.id},
-                process.env.JWT_SECRET || '123', {expiresIn: '20s'})
+        const accessToken = jwt.sign({userId: user.id},
+                settings.JWT_SECRET, {expiresIn: '10s'})
+        const refreshToken = jwt.sign({userId: user.id},
+                settings.JWT_SECRET, {expiresIn: '20s'})
         const jwtTokenPair = {accessToken, refreshToken}
         return jwtTokenPair
     },

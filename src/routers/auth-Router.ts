@@ -65,19 +65,24 @@ authRouter.post('/registration-email-resending', emailValidation, inputValidatio
     })
 authRouter.post('/refresh-token', async (req: Request, res: Response) => {
     const refreshToken = req.cookies.refreshToken
-
-
     if (!refreshToken) return res.sendStatus(401)
+
     const tokenTime = await jwtService.getTokenTime(refreshToken)
     if(!tokenTime) return res.sendStatus(401)
+
+
     const checkToken = await authService.checkTokenInBlackList(refreshToken)
     if(!checkToken) return res.sendStatus(401)
+
+
     const userId = await jwtService.getUserIdByToken(refreshToken)
+    const user = await usersService.findUsersById(userId)
+    if (!user) return res.sendStatus(401)
 
     await authService.addTokenInBlackList(refreshToken)
 
 
-    const jwtTokenPair = await jwtService.createJWTPair(userId)
+    const jwtTokenPair = await jwtService.createJWTPair(user)
     res.cookie('refreshToken', jwtTokenPair.refreshToken, {httpOnly: true, secure: true})
     res.status(200).send({accessToken: jwtTokenPair.accessToken})
     })
