@@ -34,7 +34,7 @@ export const jwtService = {
                 return false
             }
         } catch (error) {
-            return null
+            return false
         }
     },
 }
