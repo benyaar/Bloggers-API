@@ -63,56 +63,56 @@ authRouter.post('/registration-email-resending', emailValidation, inputValidatio
 
         }
     })
-// authRouter.post('/refresh-token', async (req: Request, res: Response) => {
-//     const refreshToken = req.cookies.refreshToken
-//
-//
-//     if (!refreshToken) return res.sendStatus(401)
-//     const tokenTime = await jwtService.getTokenTime(refreshToken)
-//     if(!tokenTime) return res.sendStatus(401)
-//     const checkToken = await authService.checkTokenInBlackList(refreshToken)
-//     if(!checkToken) return res.sendStatus(401)
-//     const userId = await jwtService.getUserIdByToken(refreshToken)
-//
-//     await authService.addTokenInBlackList(refreshToken)
-//
-//
-//     const jwtTokenPair = await jwtService.createJWTPair(userId)
-//     res.cookie('refreshToken', jwtTokenPair.refreshToken, {httpOnly: true, secure: true})
-//     res.status(200).send({accessToken: jwtTokenPair.accessToken})
-//     })
-//
-// authRouter.get('/me', authMiddlewareBearer,
-//     async (req: Request, res: Response) => {
-//         const header = req.headers.authorization
-//         if (!header) return res.sendStatus(401)
-//
-//         const token = header!.split(' ')[1]
-//         const userId = await jwtService.getUserIdByToken(token)
-//         const user = await usersService.findUsersById(userId)
-//
-//         if (user) {
-//             res.status(200).send({
-//                 email: user.email,
-//                 login: user.login,
-//                 userId: user.id,
-//             })
-//         } else {
-//             res.sendStatus(401)
-//         }
-//     })
-// authRouter.post('/logout', async (req: Request, res: Response) => {
-//     const refreshToken = req.cookies.refreshToken
-//
-//
-//     if (!refreshToken) return res.sendStatus(401)
-//     const tokenTime = await jwtService.getTokenTime(refreshToken)
-//     if(!tokenTime) return res.sendStatus(401)
-//     const checkToken = await authService.checkTokenInBlackList(refreshToken)
-//     if(!checkToken) return res.sendStatus(401)
-//     const userId = await jwtService.getUserIdByToken(refreshToken)
-//
-//     await authService.addTokenInBlackList(refreshToken)
-//
-//     res.sendStatus(204)
-// })
+authRouter.post('/refresh-token', async (req: Request, res: Response) => {
+    const refreshToken = req.cookies.refreshToken
+
+
+    if (!refreshToken) return res.sendStatus(401)
+    const tokenTime = await jwtService.getTokenTime(refreshToken)
+    if(!tokenTime) return res.sendStatus(401)
+    const checkToken = await authService.checkTokenInBlackList(refreshToken)
+    if(!checkToken) return res.sendStatus(401)
+    const userId = await jwtService.getUserIdByToken(refreshToken)
+
+    await authService.addTokenInBlackList(refreshToken)
+
+
+    const jwtTokenPair = await jwtService.createJWTPair(userId)
+    res.cookie('refreshToken', jwtTokenPair.refreshToken, {httpOnly: true, secure: true})
+    res.status(200).send({accessToken: jwtTokenPair.accessToken})
+    })
+
+authRouter.get('/me', authMiddlewareBearer,
+    async (req: Request, res: Response) => {
+        const header = req.headers.authorization
+        if (!header) return res.sendStatus(401)
+
+        const token = header!.split(' ')[1]
+        const userId = await jwtService.getUserIdByToken(token)
+        const user = await usersService.findUsersById(userId)
+
+        if (user) {
+            res.status(200).send({
+                email: user.email,
+                login: user.login,
+                userId: user.id,
+            })
+        } else {
+            res.sendStatus(401)
+        }
+    })
+authRouter.post('/logout', async (req: Request, res: Response) => {
+    const refreshToken = req.cookies.refreshToken
+
+
+    if (!refreshToken) return res.sendStatus(401)
+    const tokenTime = await jwtService.getTokenTime(refreshToken)
+    if(!tokenTime) return res.sendStatus(401)
+    const checkToken = await authService.checkTokenInBlackList(refreshToken)
+    if(!checkToken) return res.sendStatus(401)
+    const userId = await jwtService.getUserIdByToken(refreshToken)
+
+    await authService.addTokenInBlackList(refreshToken)
+
+    res.sendStatus(204)
+})
