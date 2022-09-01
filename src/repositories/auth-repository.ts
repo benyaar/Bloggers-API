@@ -25,7 +25,7 @@ export const authRepository = {
 
     },
     async checkTokenInBlackList (refreshToken: string){
-        return await tokenBlackList.findOne({refreshToken})
+        return await tokenBlackList.findOne({refreshToken: refreshToken})
     },
     async addTokenInBlackList (refreshToken: string){
         return await tokenBlackList.insertOne({refreshToken})
