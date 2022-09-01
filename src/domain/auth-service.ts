@@ -79,4 +79,10 @@ export const authService = {
         await emailService.sendEmail(email, newEmailConfirmation.emailConfirmation.confirmationCode)
         return
     },
+    async checkTokenInBlackList (refreshToken: string){
+        return await authRepository.checkTokenInBlackList(refreshToken)
+    },
+    async addTokenInBlackList (refreshToken: string){
+        return await authRepository.addTokenInBlackList(refreshToken)
+    },
  }

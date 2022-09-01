@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken'
 import {settings} from "../settings/settings";
-import {ObjectId} from "mongodb";
-import {toString} from "express-validator/src/utils";
+
 import {UsersDBType} from "../repositories/db";
 
 export const jwtService = {
@@ -27,5 +26,13 @@ export const jwtService = {
                 process.env.JWT_SECRET || '123', {expiresIn: '20s'})
         const jwtTokenPair = {accessToken, refreshToken}
         return jwtTokenPair
-    }
+    },
+    async getTokenTime(token: string){
+        try{
+            const result:any =  jwt.verify(token, settings.JWT_SECRET)
+            return result.exp
+        } catch (error) {
+            return null
+        }
+    },
 }

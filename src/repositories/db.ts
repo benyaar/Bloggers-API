@@ -47,6 +47,10 @@ export type AttemptType = {
     time: Date
 }
 
+export type TokenBlackList = {
+   refreshToken: string
+}
+
 const mongoUri = process.env.mongoURI || "mongodb+srv://admin:admin@cluster0.9zvor.mongodb.net/bloggersList?retryWrites=true&w=majority"
 
 const client = new MongoClient(mongoUri)
@@ -56,6 +60,7 @@ export const postsCollection = db.collection<PostsType>("posts")
 export const usersCollection = db.collection<UsersDBType>("users")
 export const commentsCollection = db.collection<CommentsType>("comments")
 export const attemptsCollection = db.collection<AttemptType>("attempts")
+export const tokenBlackList = db.collection<TokenBlackList>("tokenBlackList")
 
 export async function  runDb() {
 

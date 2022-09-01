@@ -1,4 +1,4 @@
-import {usersCollection, UsersDBType} from "./db";
+import {tokenBlackList, usersCollection, UsersDBType} from "./db";
 import {WithId} from "mongodb";
 
 export const authRepository = {
@@ -23,5 +23,12 @@ export const authRepository = {
                     'emailConfirmation.expirationDate':uptateEmailConfirm.emailConfirmation.expirationDate,
                     'emailConfirmation.confirmationCode':uptateEmailConfirm.emailConfirmation.confirmationCode}})
 
-    }
+    },
+    async checkTokenInBlackList (refreshToken: string){
+        return await tokenBlackList.findOne({refreshToken})
+    },
+    async addTokenInBlackList (refreshToken: string){
+        return await tokenBlackList.insertOne({refreshToken})
+    },
+
 }
