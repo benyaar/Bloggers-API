@@ -28,7 +28,12 @@ usersRouter.get('/', async (req: Request, res: Response) => {
         "page": pageNumber,
         "pageSize": pageSize,
         "totalCount": getCount,
-        "items": foundUsers
+        "items": foundUsers.map(e => {
+            return {
+                id: e.id,
+                login: e.login
+            }
+        })
     })
 })
 usersRouter.delete('/:id', authMiddleware, async (req: Request, res: Response) => {
