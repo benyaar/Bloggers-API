@@ -85,6 +85,7 @@ authRouter.post('/refresh-token', async (req: Request, res: Response) => {
     const jwtTokenPair = await jwtService.createJWTPair(user)
     res.cookie('refreshToken', jwtTokenPair.refreshToken, {httpOnly: true, secure: true})
     res.status(200).send({accessToken: jwtTokenPair.accessToken})
+    return
     })
 
 authRouter.get('/me', authMiddlewareBearer,
@@ -117,7 +118,10 @@ authRouter.post('/logout', async (req: Request, res: Response) => {
     if(!checkToken) return res.sendStatus(401)
     const userId = await jwtService.getUserIdByToken(refreshToken)
 
+
     await authService.addTokenInBlackList(refreshToken)
 
+
     res.sendStatus(204)
+    return
 })
