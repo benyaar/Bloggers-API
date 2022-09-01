@@ -30,7 +30,11 @@ export const jwtService = {
     async getTokenTime(token: string){
         try{
             const result:any =  jwt.verify(token, settings.JWT_SECRET)
-            return result.exp
+            if(result) {
+                return result.exp
+            } else {
+                return false
+            }
         } catch (error) {
             return null
         }
