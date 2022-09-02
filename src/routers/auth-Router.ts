@@ -110,14 +110,17 @@ authRouter.get('/me', authMiddlewareBearer,
     })
 authRouter.post('/logout', async (req: Request, res: Response) => {
     const refreshToken = req.cookies.refreshToken
-
-
     if (!refreshToken) return res.sendStatus(401)
+
     const tokenTime = await jwtService.getTokenTime(refreshToken)
     if(!tokenTime) return res.sendStatus(401)
+
     const checkToken = await authService.checkTokenInBlackList(refreshToken)
-    if(!checkToken) return res.sendStatus(401)
+    if(checkToken) return res.sendStatus(401)
+
     const userId = await jwtService.getUserIdByToken(refreshToken)
+    const user = await usersService.findUsersById(userId)
+    if (!user) return res.sendStatus(401)
 
 
     await authService.addTokenInBlackList(refreshToken)
