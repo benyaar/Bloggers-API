@@ -64,6 +64,7 @@ authRouter.post('/registration-email-resending', emailValidation, inputValidatio
         }
     })
 authRouter.post('/refresh-token', async (req: Request, res: Response) => {
+    console.log('req.cookies', req.cookies)
     const refreshToken = req.cookies.refreshToken
     if (!refreshToken) return res.sendStatus(401)
 
