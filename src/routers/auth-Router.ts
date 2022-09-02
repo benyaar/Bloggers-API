@@ -73,7 +73,7 @@ authRouter.post('/refresh-token', async (req: Request, res: Response) => {
 
 
     const checkToken = await authService.checkTokenInBlackList(refreshToken)
-    if(!checkToken) return res.sendStatus(401)
+    if(checkToken) return res.sendStatus(401)
 
 
     const userId = await jwtService.getUserIdByToken(refreshToken)
