@@ -98,7 +98,7 @@ const postsScheme  = new mongoose.Schema<PostsType>({
         }]
     }
 
-})
+}, {_id : false})
 const userScheme = new mongoose.Schema<UsersDBType>({
     id: String,
     login:String,
