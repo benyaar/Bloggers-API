@@ -1,4 +1,4 @@
-import {bloggersCollection, BloggersType} from "./db";
+import {bloggersModal, BloggersType} from "./db";
 
 const options = {
     projection: {
@@ -7,19 +7,19 @@ const options = {
 }
 
 export const bloggersRepository = {
-    async findBloggers(pageSize:number, pageNumber:number, searchNameTerm:string) {
-        return await bloggersCollection.find({name: {$regex: searchNameTerm}}, options).skip((pageNumber-1)*pageSize).limit(pageSize).toArray()
+    async findBloggers(pageSize:number, pageNumber:number, searchNameTerm:string): Promise <BloggersType>{
+        return bloggersModal.find({name: {$regex: searchNameTerm}}, options).skip((pageNumber-1)*pageSize).limit(pageSize).lean()
     },
 
 
     async findBloggersById(id: string) {
-        return await bloggersCollection.findOne({id: id}, options)
+        return bloggersModal.findOne({id: id}, options)
 
     },
 
-    async createBloggers(newBlogger: BloggersType) {
+    async createBloggers(newBlogger: BloggersType)   {
 
-        await bloggersCollection.insertOne(newBlogger)
+        await bloggersModal.insertMany([newBlogger])
         const {id, name, youtubeUrl} = newBlogger
         return {
             id, name, youtubeUrl
@@ -28,7 +28,7 @@ export const bloggersRepository = {
     }
     ,
     async updateBlogger(id: string, name: string, youtubeUrl: string) {
-        const result = await bloggersCollection.updateOne({id: id}, {
+        const result = await bloggersModal.updateOne({id: id}, {
             $set: {
                 name: name,
                 youtubeUrl: youtubeUrl
@@ -38,11 +38,11 @@ export const bloggersRepository = {
     },
     async deleteBloggers(id: string) {
 
-        const result = await bloggersCollection.deleteOne({id: id})
+        const result = await bloggersModal.deleteOne({id: id})
         return result.deletedCount === 1
     },
     async getCount(searchNameTerm: string) {
-        return await bloggersCollection.countDocuments({name: {$regex: searchNameTerm}})
+        return  bloggersModal.countDocuments({name: {$regex: searchNameTerm}})
     }
 
 

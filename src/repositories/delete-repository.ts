@@ -1,13 +1,13 @@
-import {attemptsCollection, bloggersCollection, commentsCollection, db, postsCollection, usersCollection} from "./db";
+import {attemptsModal, bloggersModal, commentsModal, postsModal, usersModal} from "./db";
 
 export const deleteRepository = {
 
     async deleteAll(){
-       await bloggersCollection.deleteMany({})
-        await  postsCollection.deleteMany({})
-        await usersCollection.deleteMany({})
-        await commentsCollection.deleteMany({})
-        await attemptsCollection.deleteMany({})
+       await bloggersModal.deleteMany({})
+        await  postsModal.deleteMany({})
+        await usersModal.deleteMany({})
+        await commentsModal.deleteMany({})
+        await attemptsModal.deleteMany({})
         return true
     }
 }

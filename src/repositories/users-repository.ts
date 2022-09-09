@@ -1,4 +1,4 @@
-import {usersCollection, UsersDBType, UsersType} from "./db";
+import {usersModal, UsersDBType} from "./db";
 
 
 const options = {
@@ -12,26 +12,26 @@ const options = {
 export const usersRepository = {
 
     async createUser(newUser: UsersDBType) {
-     await usersCollection.insertOne(newUser)
+     await usersModal.insertMany(newUser)
         const {id, login} = newUser
         return{
             id, login
         }
     },
     async findUsers(pageSize:number, pageNumber:number) {
-        return await usersCollection.find({}, options).skip((pageNumber-1)*pageSize).limit(pageSize).toArray()
+        return  usersModal.find({}, options).skip((pageNumber-1)*pageSize).limit(pageSize)
     },
     async getCount(){
-        return await usersCollection.countDocuments()
+        return  usersModal.countDocuments()
     },
     async deleteUsers(id:string){
-        const result = await usersCollection.deleteOne({id: id})
+        const result = await usersModal.deleteOne({id: id})
         return result.deletedCount === 1
     },
     async findLogin(login:string){
-        return await usersCollection.findOne({login: login})
+        return  usersModal.findOne({login: login})
     },
     async findUsersById(userId:string){
-        return await usersCollection.findOne({id: userId})
+        return  usersModal.findOne({id: userId})
     }
 }

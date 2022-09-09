@@ -1,4 +1,4 @@
-import {commentsCollection} from "./db";
+import {commentsModal} from "./db";
 
 const options = {
     projection: {
@@ -9,26 +9,26 @@ const options = {
 
 export const commentRepository = {
     async createComment(newComment: any) {
-        await commentsCollection.insertOne(newComment)
+        await commentsModal.insertMany(newComment)
         const {id, content, userId, userLogin, addedAt} = newComment
         return {id, content, userId, userLogin, addedAt}
     },
     async findComment(id:string){
-        return await commentsCollection.findOne({id: id}, options)
+        return  commentsModal.findOne({id: id}, options)
     },
     async findCommentWithPag(postId: string, pageSize:number, pageNumber:number){
-        return await commentsCollection.find({postId: postId}, options).skip((pageNumber-1)*pageSize).limit(pageSize).toArray()
+        return  commentsModal.find({postId: postId}, options).skip((pageNumber-1)*pageSize).limit(pageSize)
     },
     async getCount(postId:string){
-        return await commentsCollection.count({postId: postId})
+        return  commentsModal.count({postId: postId})
     },
     async deleteComment(id: string) {
 
-        const result = await commentsCollection.deleteOne({id: id})
+        const result = await commentsModal.deleteOne({id: id})
         return result.deletedCount === 1
     },
     async updateComment(content:string, id:string ){
-        const result = await commentsCollection.updateOne({id: id}, {
+        const result = await commentsModal.updateOne({id: id}, {
             $set: {
                 content: content,
             }
@@ -37,7 +37,7 @@ export const commentRepository = {
 
     },
     async findUser(userId:string, commentId: string){
-        return await commentsCollection.findOne({userId: userId, id:commentId})
+        return  commentsModal.findOne({userId: userId, id:commentId})
     },
 
 }

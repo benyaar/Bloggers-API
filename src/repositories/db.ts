@@ -1,6 +1,5 @@
 import {MongoClient} from "mongodb";
-import add from "date-fns/add";
-
+import mongoose from "mongoose";
 
 export type BloggersType = {
     id: string
@@ -40,13 +39,11 @@ export type  EmailConfirmationType = {
         expirationDate: Date,
          isConfirmed: boolean
 }
-
 export type AttemptType = {
     userIP: string
     url: string
     time: Date
 }
-
 export type TokenBlackList = {
    refreshToken: string
 }
@@ -54,22 +51,70 @@ export type TokenBlackList = {
 const mongoUri = process.env.mongoURI || "mongodb+srv://admin:admin@cluster0.9zvor.mongodb.net/bloggersList?retryWrites=true&w=majority"
 
 const client = new MongoClient(mongoUri)
+let dbName = process.env.mongoDBName || "bloggersList"
+
 export const db = client.db("bloggersList")
-export const bloggersCollection = db.collection<BloggersType>("bloggers")
-export const postsCollection = db.collection<PostsType>("posts")
-export const usersCollection = db.collection<UsersDBType>("users")
-export const commentsCollection = db.collection<CommentsType>("comments")
-export const attemptsCollection = db.collection<AttemptType>("attempts")
-export const tokenBlackList = db.collection<TokenBlackList>("tokenBlackList")
+//export const bloggersCollection = db.collection<BloggersType>("bloggers")
+//export const postsCollection = db.collection<PostsType>("posts")
+//export const usersCollection = db.collection<UsersDBType>("users")
+//export const commentsCollection = db.collection<CommentsType>("comments")
+//export const attemptsCollection = db.collection<AttemptType>("attempts")
+//export const tokenBlackList = db.collection<TokenBlackList>("tokenBlackList")
+
+const bloggersScheme = new mongoose.Schema<BloggersType>({
+    id: String,
+    name: String,
+    youtubeUrl: String
+})
+const postsScheme  = new mongoose.Schema<PostsType>({
+    id: String,
+    title: String,
+    shortDescription: String,
+    content: String,
+    bloggerId: String,
+    bloggerName: String
+})
+const userScheme = new mongoose.Schema<UsersDBType>({
+    id: String,
+    login:String,
+    email: String,
+    createdDat: Date,
+    passwordHash: String,
+    passwordSalt: String,
+    emailConfirmation:
+        {confirmationCode: String,
+        expirationDate: Date,
+        isConfirmed: Boolean}
+})
+const commentsScheme = new mongoose.Schema<CommentsType>({
+    id: String,
+    content: String,
+})
+const attemptsScheme = new mongoose.Schema<AttemptType>({
+    userIP: String,
+    url: String,
+    time: Date
+})
+const tokenBlackListScheme = new mongoose.Schema<TokenBlackList>({
+    refreshToken: String
+})
+
+
+export const bloggersModal = mongoose.model("bloggers", bloggersScheme)
+export const postsModal = mongoose.model("posts", postsScheme)
+export const usersModal = mongoose.model("users", userScheme)
+export const commentsModal = mongoose.model("comments", commentsScheme)
+export const attemptsModal = mongoose.model("attempts", attemptsScheme)
+export const tokenBlackListModal = mongoose.model("tokenBlackList", tokenBlackListScheme)
+
 
 export async function  runDb() {
 
     try {
-        await client.connect()
-        await client.db("bloggersList").command({ping:1})
-        console.log("Connected successfully to mongo server")
+       await mongoose.connect(mongoUri)
+        console.log("Connected successfully to moongoose server")
     }
     catch{
-        await client.close()
+        await mongoose.disconnect()
     }
 }
