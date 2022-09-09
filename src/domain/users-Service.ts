@@ -1,7 +1,8 @@
 import {usersRepository} from "../repositories/users-repository";
-import {UsersType} from "../repositories/db";
+import {UsersDBType} from "../repositories/db";
 import {ObjectId} from "mongodb";
 import bcrypt from "bcrypt";
+import add from "date-fns/add";
 
 
 export const usersService = {
@@ -9,12 +10,21 @@ export const usersService = {
 
         const passwordSalt = await bcrypt.genSalt(10)
         const passwordHash = await this._generateHash(password, passwordSalt)
-        const newUser: UsersType = {
-                    id: new ObjectId().toString(),
-                    login: login,
+        const newUser: UsersDBType = {
+            id: new ObjectId().toString(),
+            login: login,
+            email: "test",
+            createdDat: new Date(),
             passwordSalt,
             passwordHash,
-
+            emailConfirmation: {
+                confirmationCode: "test" ,
+                expirationDate: add(new Date(), {
+                    hours: 1,
+                    minutes: 3,
+                }),
+                isConfirmed: false,
+            }
                 }
                 return usersRepository.createUser(newUser)
     },

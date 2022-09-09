@@ -1,4 +1,4 @@
-import { postsCollection, PostsType} from "./db";
+import { postsModal, PostsType} from "./db";
 
 const options = {
     projection: {
@@ -7,20 +7,20 @@ const options = {
 }
 export const postsRepository = {
     async findPosts(pageSize:number, pageNumber:number) {
-        return await postsCollection.find({}, options).skip((pageNumber-1)*pageSize).limit(pageSize).toArray()
+        return  postsModal.find({}, options).skip((pageNumber-1)*pageSize).limit(pageSize)
     },
     async findPostById(id: string) {
-        return await postsCollection.findOne({id: id}, options)
+        return  postsModal.findOne({id: id}, options)
     },
     async createPost(newPosts: PostsType) {
-        await postsCollection.insertOne(newPosts)
+        await postsModal.insertMany(newPosts)
         const {id, title, shortDescription, content, bloggerId, bloggerName} = newPosts
         return {
             id, title, shortDescription, content, bloggerId, bloggerName
         }
     },
     async updatePost(id: string, title: string, shortDescription: string, content: string, bloggerId: string) {
-        const result = await postsCollection.updateOne({id: id}, {
+        const result = await postsModal.updateOne({id: id}, {
             $set: {
                 title: title,
                 shortDescription: shortDescription,
@@ -32,16 +32,16 @@ export const postsRepository = {
     },
     async deletePosts(id: string) {
 
-        const result = await postsCollection.deleteOne({id: id})
+        const result = await postsModal.deleteOne({id: id})
         return result.deletedCount === 1
     },
     async getCount() {
-        return await postsCollection.count({})
+        return  postsModal.count({})
     },
     async findBloggersPost(pageSize:number, pageNumber:number, bloggerId: string){
-        return await postsCollection.find({bloggerId: bloggerId}, options).skip((pageNumber-1)*pageSize).limit(pageSize).toArray()
+        return  postsModal.find({bloggerId: bloggerId}, options).skip((pageNumber-1)*pageSize).limit(pageSize)
     },
     async getCountBloggerId(bloggerId: string) {
-        return await postsCollection.count({bloggerId: bloggerId})
+        return  postsModal.count({bloggerId: bloggerId})
     },
 }
