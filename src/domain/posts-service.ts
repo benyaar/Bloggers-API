@@ -1,5 +1,6 @@
 import {postsRepository} from "../repositories/posts-repository";
 import {ObjectId} from "mongodb";
+import {PostsType} from "../repositories/db";
 
 
 
@@ -12,7 +13,7 @@ export const postsService = {
         return await postsRepository.findPostById(id)
     },
     async createPost(id: string, title: string, shortDescription: string, content: string, bloggerId: string) {
-        const newPosts = {
+        const newPosts: PostsType = {
             id: new ObjectId().toString(),
             title: title,
             shortDescription: shortDescription,
@@ -22,13 +23,15 @@ export const postsService = {
             addedAt: new Date,
             extendedLikesInfo: {
                 likesCount: 0,
-                dislikeCount: 0,
+                dislikesCount: 0,
                 myStatus: "None",
-                newestLikes:{
+                newestLikes: [
+                    {
                     addedAt: new Date,
                     userId: "vasya",
                     login: "vasya",
                 }
+                ]
             }
         }
         return await postsRepository.createPost(newPosts)

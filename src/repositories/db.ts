@@ -17,13 +17,15 @@ export type PostsType = {
     addedAt: Date,
     extendedLikesInfo: {
         likesCount: number,
-        dislikeCount: number,
+        dislikesCount: number,
         myStatus: string,
-        newestLikes:{
+        newestLikes:[
+            {
             addedAt: Date,
             userId: string,
             login: string,
         }
+        ]
     }
 }
 export type UsersType = {
@@ -87,13 +89,13 @@ const postsScheme  = new mongoose.Schema<PostsType>({
     addedAt: Date,
     extendedLikesInfo: {
         likesCount: Number,
-        dislikeCount: Number,
+        dislikesCount: Number,
         myStatus: String,
-        newestLikes:{
+        newestLikes:[{
             addedAt: Date,
             userId: String,
             login: String,
-        }
+        }]
     }
 
 })
