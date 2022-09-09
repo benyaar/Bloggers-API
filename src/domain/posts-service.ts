@@ -32,7 +32,6 @@ export const postsService = {
             }
         }
         return await postsRepository.createPost(newPosts)
-
     },
     async updatePost(id: string, title: string, shortDescription: string, content: string, bloggerId: string) {
         return await postsRepository.updatePost(id, title, shortDescription, content, bloggerId)
