@@ -1,4 +1,4 @@
-import {MongoClient} from "mongodb";
+import {MongoClient, ObjectId} from "mongodb";
 import mongoose from "mongoose";
 
 export type BloggersType = {
@@ -14,6 +14,17 @@ export type PostsType = {
     content: string
     bloggerId: string
     bloggerName: string
+    addedAt: Date,
+    extendedLikesInfo: {
+        likesCount: number,
+        dislikeCount: number,
+        myStatus: string,
+        newestLikes:{
+            addedAt: Date,
+            userId: string,
+            login: string,
+        }
+    }
 }
 export type UsersType = {
     id: string
@@ -72,7 +83,19 @@ const postsScheme  = new mongoose.Schema<PostsType>({
     shortDescription: String,
     content: String,
     bloggerId: String,
-    bloggerName: String
+    bloggerName: String,
+    addedAt: Date,
+    extendedLikesInfo: {
+        likesCount: Number,
+        dislikeCount: Number,
+        myStatus: String,
+        newestLikes:{
+            addedAt: Date,
+            userId: String,
+            login: String,
+        }
+    }
+
 })
 const userScheme = new mongoose.Schema<UsersDBType>({
     id: String,
