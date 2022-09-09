@@ -10,8 +10,6 @@ import {nameValidation, urlValidation, contentValidation, shortDescriptionValida
 export const bloggersRouter = Router({})
 
 
-
-
 bloggersRouter.get('/', async (req: Request, res: Response) => {
 
     const pageSize: number = Number(req.query.PageSize) || 10

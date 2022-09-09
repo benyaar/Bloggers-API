@@ -18,7 +18,18 @@ export const postsService = {
             shortDescription: shortDescription,
             content: content,
             bloggerId: bloggerId,
-            bloggerName: "Brendan Eich"
+            bloggerName: "Brendan Eich",
+            addedAt: new Date,
+            extendedLikesInfo: {
+                likesCount: 0,
+                dislikeCount: 0,
+                myStatus: "None",
+                newestLikes:{
+                    addedAt: new Date,
+                    userId: "vasya",
+                    login: "vasya",
+                }
+            }
         }
         return await postsRepository.createPost(newPosts)
 
