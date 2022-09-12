@@ -1,4 +1,4 @@
-import {MongoClient, ObjectId} from "mongodb";
+import {MongoClient} from "mongodb";
 import mongoose from "mongoose";
 
 export type BloggersType = {
@@ -36,8 +36,18 @@ export type UsersType = {
 }
 export type CommentsType = {
     id: string
-    content:string
+    content: string
+    userId: string,
+    userLogin: string,
+    addedAt: Date,
+    postId: string,
+    likesInfo: {
+        likesCount: number,
+        dislikesCount: number,
+        myStatus: string
+    }
 }
+
 export type UsersDBType = {
     id: string
     login:string
@@ -114,7 +124,16 @@ const userScheme = new mongoose.Schema<UsersDBType>({
 const commentsScheme = new mongoose.Schema<CommentsType>({
     id: String,
     content: String,
-})
+    userId: String,
+    userLogin: String,
+    addedAt: Date,
+    postId: String,
+    likesInfo: {
+        likesCount: Number,
+        dislikesCount: Number,
+        myStatus: String
+    }
+}, {_id : false})
 const attemptsScheme = new mongoose.Schema<AttemptType>({
     userIP: String,
     url: String,
@@ -137,7 +156,7 @@ export async function  runDb() {
 
     try {
        await mongoose.connect(mongoUri)
-        console.log("Connected successfully to moongoose server")
+        console.log("Connected successfully to mongoose server")
     }
     catch{
         await mongoose.disconnect()
