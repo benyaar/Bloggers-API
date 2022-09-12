@@ -9,7 +9,9 @@ const options = {
 export const commentRepository = {
     async createComment(newComment: any) {
         await commentsModal.insertMany(newComment)
-        return newComment
+        const  newCommentCopy = {...newComment}
+        delete newCommentCopy.postId
+        return  newCommentCopy
     },
     async findComment(id:string){
         return  commentsModal.findOne({id: id}, options)
