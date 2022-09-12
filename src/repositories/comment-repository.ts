@@ -1,18 +1,21 @@
 import {commentsModal} from "./db";
 
-
+const options = {
+    _id:0,
+    __v:0,
+    postId:0
+}
 
 export const commentRepository = {
     async createComment(newComment: any) {
         await commentsModal.insertMany(newComment)
-        const {id, content, userId, userLogin, addedAt} = newComment
-        return {id, content, userId, userLogin, addedAt}
+        return newComment
     },
     async findComment(id:string){
-        return  commentsModal.findOne({id: id},  {_id:0, __v:0})
+        return  commentsModal.findOne({id: id}, options)
     },
     async findCommentWithPag(postId: string, pageSize:number, pageNumber:number){
-        return  commentsModal.find({postId: postId},  {_id:0, __v:0}).skip((pageNumber-1)*pageSize).limit(pageSize)
+        return  commentsModal.find({postId: postId}, options).skip((pageNumber-1)*pageSize).limit(pageSize)
     },
     async getCount(postId:string){
         return  commentsModal.count({postId: postId})
@@ -32,7 +35,7 @@ export const commentRepository = {
 
     },
     async findUser(userId:string, commentId: string){
-        return  commentsModal.findOne({userId: userId, id:commentId},  {_id:0, __v:0})
+        return  commentsModal.findOne({userId: userId, id:commentId}, options)
     },
 
 }
