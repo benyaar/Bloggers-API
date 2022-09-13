@@ -51,4 +51,8 @@ export const postsService = {
     async getCountBloggerId(bloggerId: string) {
         return await postsRepository.getCountBloggerId(bloggerId)
     },
+    async updateLikeStatus(postId: string, userId: string, login:string, likeStatus: string) {
+        return await postsRepository.updateLikeStatus(postId, userId, login, likeStatus)
+    },
+
 }

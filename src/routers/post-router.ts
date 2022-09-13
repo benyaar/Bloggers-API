@@ -115,3 +115,15 @@ postsRouter.get('/:postId/comments', async (req: Request, res: Response) => {
         res.sendStatus(404)
     }
 })
+postsRouter.put('/:postId/like-status',authMiddlewareBearer, async (req: Request, res: Response) => {
+    const findPost = await postsService.findPostById(req.params.postId)
+    if(findPost){
+        const isUpdate = await postsService.updateLikeStatus(req.params.postId, req.user!.id, req.user!.login, req.body.likeStatus)
+        res.status(201).send(isUpdate)
+    }else {
+        res.sendStatus(404)
+    }
+
+
+
+})
