@@ -119,7 +119,7 @@ postsRouter.put('/:postId/like-status',authMiddlewareBearer,likeValidator, input
         const createLikeStatus = await postsService.createLikeStatus(req.params.postId,req.body.likeStatus,req.user!.id, req.user!.login )
 
         // const isUpdate = await postsService.updateLikeStatus(req.params.postId, req.user!.id, req.user!.login, req.body.likeStatus)
-        res.status(201).send(createLikeStatus)
+        res.status(204).send(createLikeStatus)
     }else {
         res.sendStatus(404)
     }
