@@ -19,13 +19,7 @@ export type PostsType = {
         likesCount: number,
         dislikesCount: number,
         myStatus: string,
-        newestLikes:[
-            {
-            addedAt: Date,
-            userId: string,
-            login: string,
-        }
-        ]
+        newestLikes:[]
     }
 }
 export type UsersType = {
@@ -70,11 +64,18 @@ export type AttemptType = {
 export type TokenBlackList = {
    refreshToken: string
 }
+export type NewLikeStatus = {
+    parentId: string,
+    addedAt: Date,
+    status: string,
+    userId: string,
+    login: string
+}
 
 const mongoUri = process.env.mongoURI || "mongodb+srv://admin:admin@cluster0.9zvor.mongodb.net/bloggersList?retryWrites=true&w=majority"
 
 const client = new MongoClient(mongoUri)
-let dbName = process.env.mongoDBName || "bloggersList"
+// let dbName = process.env.mongoDBName || "bloggersList"
 
 export const db = client.db("bloggersList")
 //export const bloggersCollection = db.collection<BloggersType>("bloggers")
@@ -101,11 +102,7 @@ const postsScheme  = new mongoose.Schema<PostsType>({
         likesCount: Number,
         dislikesCount: Number,
         myStatus: String,
-        newestLikes:[{
-            addedAt: Date,
-            userId: String,
-            login: String,
-        }]
+        newestLikes:[]
     }
 
 }, {_id : false})
@@ -142,7 +139,13 @@ const attemptsScheme = new mongoose.Schema<AttemptType>({
 const tokenBlackListScheme = new mongoose.Schema<TokenBlackList>({
     refreshToken: String
 })
-
+const newLikeStatusScheme = new mongoose.Schema<NewLikeStatus>({
+    parentId: String,
+    addedAt: Date,
+    status: String,
+    userId: String,
+    login: String
+})
 
 export const bloggersModal = mongoose.model("bloggers", bloggersScheme)
 export const postsModal = mongoose.model("posts", postsScheme)
@@ -150,7 +153,7 @@ export const usersModal = mongoose.model("users", userScheme)
 export const commentsModal = mongoose.model("comments", commentsScheme)
 export const attemptsModal = mongoose.model("attempts", attemptsScheme)
 export const tokenBlackListModal = mongoose.model("tokenBlackList", tokenBlackListScheme)
-
+export const newLikeStatusModal = mongoose.model("newLikeStatus", newLikeStatusScheme)
 
 export async function  runDb() {
 

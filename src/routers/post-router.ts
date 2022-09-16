@@ -5,11 +5,12 @@ import {bloggersService} from "../domain/bloggers-service";
 import {postsService} from "../domain/posts-service";
 import {
     commentValidation,
-    contentValidation,
+    contentValidation, likeValidator,
     shortDescriptionValidation,
     titleValidation
 } from "../validators/validators";
 import {commentService} from "../domain/comment-service";
+
 
 
 export const postsRouter = Router({})
@@ -47,13 +48,11 @@ postsRouter.post('/', authMiddleware, titleValidation, shortDescriptionValidatio
     }
 })
 postsRouter.get('/:id', async (req: Request, res: Response) => {
-    const post = await postsService.findPostById(req.params.id)
+    const post = await postsService.findPostByIdWithLikes(req.params.id)
+    if (!post) return res.sendStatus(404)
+     res.send(post)
 
-    if (post) {
-        res.send(post)
-    } else {
-        res.sendStatus(404)
-    }
+
 })
 postsRouter.put('/:id', authMiddleware, titleValidation, shortDescriptionValidation, contentValidation, inputValidationMiddleWare, async (req: Request, res: Response) => {
 
@@ -83,7 +82,6 @@ postsRouter.delete('/:id', authMiddleware, async (req: Request, res: Response) =
         res.send(404)
     }
 })
-
 postsRouter.post('/:postId/comments',authMiddlewareBearer, commentValidation, inputValidationMiddleWare,  async (req: Request, res: Response) => {
         const post = await postsService.findPostById(req.params.postId)
 
@@ -115,11 +113,13 @@ postsRouter.get('/:postId/comments', async (req: Request, res: Response) => {
         res.sendStatus(404)
     }
 })
-postsRouter.put('/:postId/like-status',authMiddlewareBearer, async (req: Request, res: Response) => {
+postsRouter.put('/:postId/like-status',authMiddlewareBearer,likeValidator, inputValidationMiddleWare, async (req: Request, res: Response) => {
     const findPost = await postsService.findPostById(req.params.postId)
     if(findPost){
-        const isUpdate = await postsService.updateLikeStatus(req.params.postId, req.user!.id, req.user!.login, req.body.likeStatus)
-        res.status(201).send(isUpdate)
+        const createLikeStatus = await postsService.createLikeStatus(req.params.postId,req.body.likeStatus,req.user!.id, req.user!.login )
+
+        // const isUpdate = await postsService.updateLikeStatus(req.params.postId, req.user!.id, req.user!.login, req.body.likeStatus)
+        res.status(201).send(createLikeStatus)
     }else {
         res.sendStatus(404)
     }

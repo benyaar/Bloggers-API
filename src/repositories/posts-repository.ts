@@ -42,17 +42,16 @@ export const postsRepository = {
     async getCountBloggerId(bloggerId: string) {
         return  postsModal.count({bloggerId: bloggerId})
     },
-    async updateLikeStatus(postId: string, userId: string, login:string, likeStatus: string) {
-        const result = await postsModal.updateOne({id: postId}, {
-            $set: {
-                'extendedLikesInfo.newestLikes.0.addedAt': new Date(),
-                'extendedLikesInfo.newestLikes.0.userId': userId,
-                'extendedLikesInfo.newestLikes.0.login': login,
-                'extendedLikesInfo.myStatus': likeStatus
-            }
-
-        })
-        return result.matchedCount === 1
-    },
+    // async updateLikeStatus(postId: string, userId: string, login:string, likeStatus: string) {
+    //     const result = await postsModal.updateOne({id: postId}, {
+    //         $set: {
+    //             'extendedLikesInfo.newestLikes.0.addedAt': new Date(),
+    //             'extendedLikesInfo.newestLikes.0.userId': userId,
+    //             'extendedLikesInfo.newestLikes.0.login': login,
+    //             'extendedLikesInfo.myStatus': likeStatus
+    //         }
+    //     })
+    //     return result.matchedCount === 1
+    // },
 
 }
