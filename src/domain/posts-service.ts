@@ -52,12 +52,15 @@ export const postsService = {
     },
     async findPostByIdWithLikes (parentId: string){
         const post =  await postsRepository.findPostById(parentId)
+        if (!post) return false
         const findLikeStatus = await likeStatusRepository.getLastLikesByParentId(parentId, 3)
         //const findLikeStatus = await likeStatusRepository.findLikeStatus(parentId)
         const postCopy = JSON.parse(JSON.stringify(post))
         const like = await likeStatusRepository.getLastCountLikesByParentId(parentId)
         const dislike = await likeStatusRepository.getLastCountDislikesByParentId(parentId)
-        const postWithLikes = {...postCopy, extendedLikesInfo: {...postCopy.extendedLikesInfo, likesCount: like, dislikesCount:dislike, newestLikes: findLikeStatus}}
+
+        const postWithLikes = {...postCopy, extendedLikesInfo: {...postCopy.extendedLikesInfo, likesCount: like,  dislikesCount:dislike, newestLikes: findLikeStatus}}
+        //const postWithLikes = {...postCopy, extendedLikesInfo: {...postCopy.extendedLikesInfo, likesCount: like, dislikesCount:dislike, newestLikes: findLikeStatus}}
         // const postWithLikes = {...postCopy, extendedLikesInfo: {...postCopy.extexdedLikesInfo, newestLikes: [findLikeStatus]}
         //
                 // const newPosts: PostsType = {
@@ -77,8 +80,6 @@ export const postsService = {
         // }
         return postWithLikes
     },
-
-
     // if (postAPI) {
     //     const findLikes = await likeStatusService.findLikeStatus(req.params.id)
     //    const postCopy = JSON.parse(JSON.stringify(postAPI))

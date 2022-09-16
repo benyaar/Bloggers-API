@@ -18,17 +18,13 @@ export const likeStatusRepository = {
         return await newLikeStatusModal.insertMany(newLikeStatus)
 
     },
-    async findLikeStatus(parentId:string){
-
-        return newLikeStatusModal.find({parentId: parentId}, defaultOptions);
-    },
     async getLastCountLikesByParentId(parentId: string){
-        const likes = await newLikeStatusModal.countDocuments({parenId: parentId, status: 'Like'})
+        const likes = await newLikeStatusModal.countDocuments({parentId: parentId, status: 'Like'})
         //const likes = await newLikeStatusModal.countDocuments({$and:[{parenId: parentId},{'likeStatus': 'Like'}]})
        return likes
     },
-        async getLastCountDislikesByParentId(parentId: string){
-            const dislikes = await newLikeStatusModal.countDocuments({parenId: parentId, status: 'Dislike'})
+        async getLastCountDislikesByParentId(parentId: string) {
+            const dislikes = await newLikeStatusModal.countDocuments({parentId: parentId, status: 'Dislike'})
             return dislikes
         },
 
@@ -37,3 +33,4 @@ export const likeStatusRepository = {
     return likes
 }
 }
+

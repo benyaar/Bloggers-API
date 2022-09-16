@@ -15,7 +15,6 @@ export const postsRepository = {
     async createPost(newPosts: PostsType) {
         await postsModal.insertMany(newPosts)
         return newPosts
-
     },
     async updatePost(id: string, title: string, shortDescription: string, content: string, bloggerId: string) {
         const result = await postsModal.updateOne({id: id}, {
