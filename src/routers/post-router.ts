@@ -1,6 +1,6 @@
 import {Request, Response, Router} from "express";
 import {inputValidationMiddleWare} from "../middleWare/inputValidation";
-import {authMiddleware, authMiddlewareBearer} from "../middleWare/authValidation";
+import {authMiddleware, authMiddlewareBearer, checkTokenMiddleware} from "../middleWare/authValidation";
 import {bloggersService} from "../domain/bloggers-service";
 import {postsService} from "../domain/posts-service";
 import {
@@ -47,8 +47,9 @@ postsRouter.post('/', authMiddleware, titleValidation, shortDescriptionValidatio
         res.status(201).send(newPost)
     }
 })
-postsRouter.get('/:id', async (req: Request, res: Response) => {
-    const post = await postsService.findPostByIdWithLikes(req.params.id)
+postsRouter.get('/:id', checkTokenMiddleware,  async (req: Request, res: Response) => {
+    //console.log('post router, get post with likes, userId:', req.user!.id)
+    const post = await postsService.findPostByIdWithLikes(req.params.id, req.user?.id)
     if (!post) return res.sendStatus(404)
      res.send(post)
 

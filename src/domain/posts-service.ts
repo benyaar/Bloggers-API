@@ -50,54 +50,28 @@ export const postsService = {
     async getCountBloggerId(bloggerId: string) {
         return await postsRepository.getCountBloggerId(bloggerId)
     },
-    async findPostByIdWithLikes (parentId: string){
+    async findPostByIdWithLikes (parentId: string, userId: string | undefined){
         const post =  await postsRepository.findPostById(parentId)
         if (!post) return false
+        let myLikeStatus = 'None'
+        if (userId) {
+            const isUserLiked = await likeStatusRepository.getLastLikeStatusByParentAndUserId(parentId, userId)
+            if (isUserLiked) {
+                myLikeStatus = (JSON.parse(JSON.stringify(isUserLiked))).status
+            }
+        }
         const findLikeStatus = await likeStatusRepository.getLastLikesByParentId(parentId, 3)
         //const findLikeStatus = await likeStatusRepository.findLikeStatus(parentId)
         const postCopy = JSON.parse(JSON.stringify(post))
+        postCopy.extendedLikesInfo.myStatus = myLikeStatus
         const like = await likeStatusRepository.getLastCountLikesByParentId(parentId)
         const dislike = await likeStatusRepository.getLastCountDislikesByParentId(parentId)
 
         const postWithLikes = {...postCopy, extendedLikesInfo: {...postCopy.extendedLikesInfo, likesCount: like,  dislikesCount:dislike, newestLikes: findLikeStatus}}
-        //const postWithLikes = {...postCopy, extendedLikesInfo: {...postCopy.extendedLikesInfo, likesCount: like, dislikesCount:dislike, newestLikes: findLikeStatus}}
-        // const postWithLikes = {...postCopy, extendedLikesInfo: {...postCopy.extexdedLikesInfo, newestLikes: [findLikeStatus]}
-        //
-                // const newPosts: PostsType = {
-        //     id: new ObjectId().toString(),
-        //     title: title,
-        //     shortDescription: shortDescription,
-        //     content: content,
-        //     bloggerId: bloggerId,
-        //     bloggerName: "Brendan Eich",
-        //     addedAt: new Date,
-        //     extendedLikesInfo: {
-        //         likesCount: 0,
-        //         dislikesCount: 0,
-        //         myStatus: "None",
-        //         newestLikes: []
-        //     }
-        // }
+
+
         return postWithLikes
     },
-    // if (postAPI) {
-    //     const findLikes = await likeStatusService.findLikeStatus(req.params.id)
-    //    const postCopy = JSON.parse(JSON.stringify(postAPI))
-    //     const postLOL = {...postCopy, extendedLikesInfo: {...postCopy.extexdedLikesInfo, newestLikes: findLikes}}
-    //     res.send(postLOL)
-    // } else {
-    //     res.sendStatus(404)
-    // }
 
-
-
-    // TODO: start from this point
-    // async updateLikeStatus(postId: string, userId: string, login:string, likeStatus: string) {
-    //     return await postsRepository.updateLikeStatus(postId, userId, login, likeStatus)
-    // },
-    async getPostByIdWithLikes(parentId:string){
-         await postsRepository.findPostById(parentId)
-       //await  likeStatusRepository.getLastLikesByParentId()
-    }
 
 }

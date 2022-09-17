@@ -23,8 +23,19 @@ export const authMiddlewareBearer = async (req: Request, res: Response, next: Ne
         next()
     } else {
         res.sendStatus(401)
-
     }
+}
 
+export const checkTokenMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+    const auth = req.headers.authorization
+    if(!auth){
+        return next()
+    }
+    const token = auth.split(' ')[1]
+    const userId = await jwtService.getUserIdByToken(token)
+    if(userId) {
+        req.user = await usersService.findUsersById(userId)
+        return next()
+    }
 
 }
