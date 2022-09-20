@@ -50,9 +50,32 @@ export const postsService = {
     async getCountBloggerId(bloggerId: string) {
         return await postsRepository.getCountBloggerId(bloggerId)
     },
+
+    async findPostsWithLikes(pageSize:number, pageNumber:number, userId: string | undefined) {
+        const posts =  await postsRepository.findPosts(pageSize, pageNumber)
+        //if (!posts) return null
+        let postsWithLikesInfo: PostsType[] = []
+        for (let post of posts) {
+            const postWithLikesInfo = await this.findLikesInfoForPost(post.id, userId, post)
+            postsWithLikesInfo.push(postWithLikesInfo)
+        }
+        const count = postsWithLikesInfo.length
+        return {
+            "pagesCount": Math.ceil(count / pageSize),
+            "page": pageNumber,
+            "pageSize": pageSize,
+            "totalCount": count,
+            "items": postsWithLikesInfo
+        }
+    },
     async findPostByIdWithLikes (parentId: string, userId: string | undefined){
         const post =  await postsRepository.findPostById(parentId)
         if (!post) return false
+        const postWithLikesInfo = await this.findLikesInfoForPost(parentId, userId, post)
+        return postWithLikesInfo
+    },
+
+    async findLikesInfoForPost (parentId: string, userId: string | undefined, post: PostsType){
         let myLikeStatus = 'None'
         if (userId) {
             const isUserLiked = await likeStatusRepository.getLastLikeStatusByParentAndUserId(parentId, userId)
@@ -61,14 +84,12 @@ export const postsService = {
             }
         }
         const findLikeStatus = await likeStatusRepository.getLastLikesByParentId(parentId, 3)
-        //const findLikeStatus = await likeStatusRepository.findLikeStatus(parentId)
         const postCopy = JSON.parse(JSON.stringify(post))
         postCopy.extendedLikesInfo.myStatus = myLikeStatus
         const like = await likeStatusRepository.getLastCountLikesByParentId(parentId)
         const dislike = await likeStatusRepository.getLastCountDislikesByParentId(parentId)
 
         const postWithLikes = {...postCopy, extendedLikesInfo: {...postCopy.extendedLikesInfo, likesCount: like,  dislikesCount:dislike, newestLikes: findLikeStatus}}
-
 
         return postWithLikes
     },

@@ -15,23 +15,16 @@ import {commentService} from "../domain/comment-service";
 
 export const postsRouter = Router({})
 
-postsRouter.get('/', async (req: Request, res: Response) => {
+postsRouter.get('/', checkTokenMiddleware, async (req: Request, res: Response) => {
 
     const pageSize: number = Number(req.query.PageSize) || 10
     const pageNumber: number = Number(req.query.PageNumber) || 1
 
 
-    const findPost = await postsService.findPosts(pageSize, pageNumber)
-    const getCount = await postsService.getCount()
-    res.send({
-        "pagesCount": Math.ceil(getCount / pageSize),
-        "page": pageNumber,
-        "pageSize": pageSize,
-        "totalCount": getCount,
-        "items": findPost
-    })
+    const findPosts = await postsService.findPostsWithLikes(pageSize, pageNumber, req.user?.id)
+    return res.send(findPosts)
 })
-postsRouter.post('/', authMiddleware, titleValidation, shortDescriptionValidation, contentValidation, inputValidationMiddleWare, async (req: Request, res: Response) => {
+postsRouter.post('/',  authMiddleware, titleValidation, shortDescriptionValidation, contentValidation, inputValidationMiddleWare, async (req: Request, res: Response) => {
 
     let blogger = await bloggersService.findBloggersById(req.body.bloggerId)
     if (!blogger) {
