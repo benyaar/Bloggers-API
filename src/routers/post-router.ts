@@ -19,8 +19,6 @@ postsRouter.get('/', checkTokenMiddleware, async (req: Request, res: Response) =
 
     const pageSize: number = Number(req.query.PageSize) || 10
     const pageNumber: number = Number(req.query.PageNumber) || 1
-
-
     const findPosts = await postsService.findPostsWithLikes(pageSize, pageNumber, req.user?.id)
     return res.send(findPosts)
 })

@@ -37,5 +37,5 @@ export const checkTokenMiddleware = async (req: Request, res: Response, next: Ne
         req.user = await usersService.findUsersById(userId)
         return next()
     }
-
+    return next()
 }

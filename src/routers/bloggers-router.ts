@@ -1,7 +1,7 @@
 import {Request, Response, Router} from "express";
 import {bloggersService} from "../domain/bloggers-service";
 import {inputValidationMiddleWare} from "../middleWare/inputValidation";
-import {authMiddleware} from "../middleWare/authValidation";
+import {authMiddleware, checkTokenMiddleware} from "../middleWare/authValidation";
 import {toString} from "express-validator/src/utils";
 import {postsService} from "../domain/posts-service";
 import {nameValidation, urlValidation, contentValidation, shortDescriptionValidation, titleValidation} from "../validators/validators";
@@ -83,22 +83,29 @@ bloggersRouter.post('/:bloggerId/posts', authMiddleware, titleValidation, shortD
     }
 })
 
-bloggersRouter.get('/:bloggerId/posts',async (req: Request, res: Response) => {
+bloggersRouter.get('/:bloggerId/posts', checkTokenMiddleware, async (req: Request, res: Response) => {
+    const blogger = await bloggersService.findBloggersById(req.params.bloggerId)
+    if(!blogger)  return res.sendStatus(404)
     const pageSize: number = Number(req.query.PageSize) || 10
     const pageNumber: number = Number(req.query.PageNumber) || 1
-    const findPost = await postsService.findBloggersPost(pageSize, pageNumber, req.params.bloggerId)
-    const getCount = await postsService.getCountBloggerId(req.params.bloggerId)
+    const bloggerPostsWithLikes = await postsService.findBloggersPostWithLikes(pageSize, pageNumber, blogger.id, req.user?.id)
+    return res.send(bloggerPostsWithLikes)
 
-    if (findPost.length > 0) {
-        res.send({
-            "pagesCount": Math.ceil(getCount/ pageSize),
-            "page": pageNumber,
-            "pageSize": pageSize,
-            "totalCount": getCount,
-            "items": findPost
-        })
-    } else {
-        res.send(404)
-    }
+
+
+   // const findPost = await postsService.findBloggersPostWithLikes(pageSize, pageNumber, req.params.bloggerId)
+   //  const getCount = await postsService.getCountBloggerId(req.params.bloggerId)
+   //
+   //  if (findPost.length > 0) {
+   //      res.send({
+   //          "pagesCount": Math.ceil(getCount/ pageSize),
+   //          "page": pageNumber,
+   //          "pageSize": pageSize,
+   //          "totalCount": getCount,
+   //          "items": findPost
+   //      })
+   //  } else {
+   //      res.send(404)
+   //  }
 })
 

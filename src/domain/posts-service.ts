@@ -7,9 +7,9 @@ import {likeStatusRepository} from "../repositories/likeStatus-repository";
 
 
 export const postsService = {
-    async findPosts(pageSize:number, pageNumber:number) {
-        return await postsRepository.findPosts(pageSize, pageNumber )
-    },
+    // async findPosts(pageSize:number, pageNumber:number) {
+    //     return await postsRepository.findPosts(pageSize, pageNumber )
+    // },
     async findPostById(id: string) {
         return await postsRepository.findPostById(id)
     },
@@ -40,8 +40,24 @@ export const postsService = {
     async getCount() {
         return await postsRepository.getCount()
     },
-    async findBloggersPost(pageSize:number, pageNumber:number,bloggerId:string) {
-        return await postsRepository.findBloggersPost(pageSize, pageNumber, bloggerId)
+    async findBloggersPostWithLikes(pageSize:number, pageNumber:number,bloggerId:string, userId: string | undefined) {
+        const posts = await postsRepository.findBloggersPost(pageSize, pageNumber, bloggerId)
+        let postsWithLikesInfo: PostsType[] = []
+        for await (let post of posts) {
+            const postWithLikesInfo = await this.findLikesInfoForPost(post.id, userId, post)
+            postsWithLikesInfo.push(postWithLikesInfo)
+        }
+        const count = postsWithLikesInfo.length
+        return {
+            "pagesCount": Math.ceil(count / pageSize),
+            "page": pageNumber,
+            "pageSize": pageSize,
+            "totalCount": count,
+            "items": postsWithLikesInfo
+        }
+
+
+
     },
     async createLikeStatus(parentId:string,status:string, id:string, login:string){
         return await likeStatusRepository.createLikeStatus(parentId,status, id, login)
@@ -55,7 +71,7 @@ export const postsService = {
         const posts =  await postsRepository.findPosts(pageSize, pageNumber)
         //if (!posts) return null
         let postsWithLikesInfo: PostsType[] = []
-        for (let post of posts) {
+        for await (let post of posts) {
             const postWithLikesInfo = await this.findLikesInfoForPost(post.id, userId, post)
             postsWithLikesInfo.push(postWithLikesInfo)
         }
@@ -69,6 +85,7 @@ export const postsService = {
         }
     },
     async findPostByIdWithLikes (parentId: string, userId: string | undefined){
+
         const post =  await postsRepository.findPostById(parentId)
         if (!post) return false
         const postWithLikesInfo = await this.findLikesInfoForPost(parentId, userId, post)

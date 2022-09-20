@@ -30,11 +30,6 @@ export const likeStatusRepository = {
         const dislikes = await newLikeStatusModal.countDocuments({parentId: parentId, status: 'Dislike'})
         return dislikes
     },
-    //TODO: check
-    // async getLikesAndDislikesCountByParentId(parentId: string) {
-    //     const likesAndDislikes = await newLikeStatusModal.countDocuments({$and: []})
-    //     return likes
-    // },
 
     async getLastLikesByParentId(parentId: string, lastLikesCount: number) {
         const likes = await newLikeStatusModal.find({
@@ -45,7 +40,10 @@ export const likeStatusRepository = {
     },
 
     async getLastLikeStatusByParentAndUserId(parentId: string, userId: string) {
-        const likeStatus = await newLikeStatusModal.findOne({parentId: parentId, userId: userId}, {_id: 0, __v: 0}).lean()
+        const likeStatus = await newLikeStatusModal.findOne({parentId: parentId, userId: userId}, {
+            _id: 0,
+            __v: 0
+        }).lean()
         return likeStatus
     }
 }
