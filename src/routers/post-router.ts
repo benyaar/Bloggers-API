@@ -89,21 +89,24 @@ postsRouter.get('/:postId/comments', async (req: Request, res: Response) => {
     const pageSize: number = Number(req.query.PageSize) || 10
     const pageNumber: number = Number(req.query.PageNumber) || 1
 
-    const findPost = await postsService.findPostById(req.params.postId)
-    if (findPost) {
-        const findComment = await commentService.findCommentWithPag(req.params.postId, pageSize, pageNumber)
-        const getCount = await commentService.getCount(req.params.postId)
-        const result = {
-            "pagesCount": Math.ceil(getCount / pageSize),
-            "page": pageNumber,
-            "pageSize": pageSize,
-            "totalCount": getCount,
-            "items": findComment
-        }
-        res.send(result)
-    } else {
-        res.sendStatus(404)
-    }
+    const findCommentsByPostIdWithLikes = await commentService.findCommentsByPostIdWithLikes(pageSize, pageNumber, req.params.postId, req.user?.id)
+    return res.send(findCommentsByPostIdWithLikes)
+
+    // const findPost = await postsService.findPostById(req.params.postId)
+    // if (findPost) {
+    //     const findComment = await commentService.findCommentWithPag(req.params.postId, pageSize, pageNumber)
+    //     const getCount = await commentService.getCount(req.params.postId)
+    //     const result = {
+    //         "pagesCount": Math.ceil(getCount / pageSize),
+    //         "page": pageNumber,
+    //         "pageSize": pageSize,
+    //         "totalCount": getCount,
+    //         "items": findComment
+    //     }
+    //     res.send(result)
+    // } else {
+    //     res.sendStatus(404)
+    // }
 })
 postsRouter.put('/:postId/like-status',authMiddlewareBearer,likeValidator, inputValidationMiddleWare, async (req: Request, res: Response) => {
     const findPost = await postsService.findPostById(req.params.postId)

@@ -2,7 +2,6 @@ import {ObjectId} from "mongodb";
 
 import {commentRepository} from "../repositories/comment-repository";
 import {CommentsType} from "../repositories/db";
-import {postsService} from "./posts-service";
 import {likeStatusRepository} from "../repositories/likeStatus-repository";
 
 export const commentService = {
@@ -25,9 +24,9 @@ export const commentService = {
     async findComment (id: string){
         return await commentRepository.findComment(id)
     },
-    async findCommentWithPag (postId: string, pageSize:number, pageNumber:number){
-        return await commentRepository.findCommentWithPag(postId, pageSize, pageNumber)
-    },
+    // async findCommentWithPag (postId: string, pageSize:number, pageNumber:number){
+    //     return await commentRepository.findCommentWithPag(postId, pageSize, pageNumber)
+    // },
     async getCount(postId:string){
         return await commentRepository.getCount(postId)
     },
@@ -40,10 +39,8 @@ export const commentService = {
     async findUser(userId:string, commentId:string){
         return await commentRepository.findUser(userId, commentId)
     },
-    async findCommentByIdWithLikes (parentId: string, userId: string | undefined){
+    async findLikesInfoForComment (parentId: string, userId: string | undefined, comment: CommentsType){
 
-        const comment =  await commentRepository.findComment(parentId)
-        if (!comment) return false
         let myLikeStatus = 'None'
         if (userId) {
             const isUserLiked = await likeStatusRepository.getLastLikeStatusByParentAndUserId(parentId, userId)
@@ -60,5 +57,29 @@ export const commentService = {
 
         return commentWithLikes
     },
+    async findCommentByIdWithLikes (parentId: string, userId: string | undefined){
+
+        const comment =  await commentRepository.findComment(parentId)
+        if (!comment) return false
+        const commentWithLikesInfo = await this.findLikesInfoForComment(parentId, userId, comment)
+        return commentWithLikesInfo
+    },
+    async findCommentsByPostIdWithLikes(pageSize:number, pageNumber:number,postId: string, userId: string | undefined){
+        const comments =  await commentRepository.findCommentWithPag(postId, pageSize, pageNumber)
+        if (!comments) return false
+        let postsWithCommentLikesInfo: CommentsType[] = []
+        for await (let comment of comments) {
+            const postWithCommentLikesInfo = await this.findLikesInfoForComment(comment.id, userId, comment)
+            postsWithCommentLikesInfo.push(postWithCommentLikesInfo)
+        }
+        const count = postsWithCommentLikesInfo.length
+        return {
+            "pagesCount": Math.ceil(count / pageSize),
+            "page": pageNumber,
+            "pageSize": pageSize,
+            "totalCount": count,
+            "items": postsWithCommentLikesInfo
+        }
+    }
 
 }

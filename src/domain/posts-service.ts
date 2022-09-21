@@ -56,8 +56,6 @@ export const postsService = {
             "items": postsWithLikesInfo
         }
 
-
-
     },
     async createLikeStatus(parentId:string,status:string, id:string, login:string){
         return await likeStatusRepository.createLikeStatus(parentId,status, id, login)
