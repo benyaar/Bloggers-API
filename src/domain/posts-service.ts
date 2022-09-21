@@ -1,6 +1,6 @@
 import {postsRepository} from "../repositories/posts-repository";
 import {ObjectId} from "mongodb";
-import {PostsType} from "../repositories/db";
+import {CommentsType, PostsType} from "../repositories/db";
 import {likeStatusRepository} from "../repositories/likeStatus-repository";
 
 
@@ -92,7 +92,7 @@ export const postsService = {
         return postWithLikesInfo
     },
 
-    async findLikesInfoForPost (parentId: string, userId: string | undefined, post: PostsType){
+    async findLikesInfoForPost (parentId: string, userId: string | undefined, post: PostsType | CommentsType){
         let myLikeStatus = 'None'
         if (userId) {
             const isUserLiked = await likeStatusRepository.getLastLikeStatusByParentAndUserId(parentId, userId)

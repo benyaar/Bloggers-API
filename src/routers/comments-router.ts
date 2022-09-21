@@ -1,6 +1,6 @@
 import {Request, Response, Router} from "express";
 import {commentService} from "../domain/comment-service";
-import { authMiddlewareBearer} from "../middleWare/authValidation";
+import {authMiddlewareBearer, checkTokenMiddleware} from "../middleWare/authValidation";
 import {
     commentValidation, likeValidator,
 } from "../validators/validators";
@@ -11,13 +11,11 @@ import {postsService} from "../domain/posts-service";
 
 export const commentsRouter = Router({})
 
-commentsRouter.get('/:id', async (req: Request, res: Response) => {
-    const comment = await commentService.findComment(req.params.id)
-    if(comment){
-        res.status(200).send(comment)
-    } else {
-        res.sendStatus(404)
-    }
+commentsRouter.get('/:id', checkTokenMiddleware, async (req: Request, res: Response) => {
+    const comment =  await commentService.findCommentByIdWithLikes(req.params.id, req.user?.id)
+    if (!comment) return res.sendStatus(404)
+    res.send(comment)
+
 
 })
 commentsRouter.delete('/:id', authMiddlewareBearer, async (req: Request, res: Response) => {

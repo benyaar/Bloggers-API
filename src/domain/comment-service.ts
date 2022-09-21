@@ -2,6 +2,7 @@ import {ObjectId} from "mongodb";
 
 import {commentRepository} from "../repositories/comment-repository";
 import {CommentsType} from "../repositories/db";
+import {postsService} from "./posts-service";
 
 export const commentService = {
     async createComment (comment: string, userId: string, userLogin:string, postId:string){
@@ -37,6 +38,13 @@ export const commentService = {
     },
     async findUser(userId:string, commentId:string){
         return await commentRepository.findUser(userId, commentId)
+    },
+    async findCommentByIdWithLikes (parentId: string, userId: string | undefined){
+
+        const comment =  await commentRepository.findComment(parentId)
+        if (!comment) return false
+        const commentWithLikesInfo = await postsService.findLikesInfoForPost(parentId, userId, comment)
+        return commentWithLikesInfo
     },
 
 }
