@@ -2,9 +2,10 @@ import {Request, Response, Router} from "express";
 import {commentService} from "../domain/comment-service";
 import { authMiddlewareBearer} from "../middleWare/authValidation";
 import {
-    commentValidation,
+    commentValidation, likeValidator,
 } from "../validators/validators";
 import {inputValidationMiddleWare} from "../middleWare/inputValidation";
+import {postsService} from "../domain/posts-service";
 
 
 
@@ -55,4 +56,14 @@ commentsRouter.put('/:commentId',authMiddlewareBearer, commentValidation, inputV
     }
 
 
+})
+commentsRouter.put('/:commentId/like-status',authMiddlewareBearer,likeValidator, inputValidationMiddleWare, async (req: Request, res: Response) => {
+    const findComment = await commentService.findComment(req.params.commentId)
+    if (findComment) {
+        const createLikeStatus = await postsService.createLikeStatus(req.params.commentId, req.body.likeStatus, req.user!.id, req.user!.login)
+
+        res.status(204).send(createLikeStatus)
+    } else {
+        res.sendStatus(404)
+    }
 })
