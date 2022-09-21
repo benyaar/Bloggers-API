@@ -3,6 +3,7 @@ import {ObjectId} from "mongodb";
 import {commentRepository} from "../repositories/comment-repository";
 import {CommentsType} from "../repositories/db";
 import {postsService} from "./posts-service";
+import {likeStatusRepository} from "../repositories/likeStatus-repository";
 
 export const commentService = {
     async createComment (comment: string, userId: string, userLogin:string, postId:string){
@@ -43,8 +44,21 @@ export const commentService = {
 
         const comment =  await commentRepository.findComment(parentId)
         if (!comment) return false
-        const commentWithLikesInfo = await postsService.findLikesInfoForPost(parentId, userId, comment)
-        return commentWithLikesInfo
+        let myLikeStatus = 'None'
+        if (userId) {
+            const isUserLiked = await likeStatusRepository.getLastLikeStatusByParentAndUserId(parentId, userId)
+            if (isUserLiked) {
+                myLikeStatus = (JSON.parse(JSON.stringify(isUserLiked))).status
+            }
+        }
+        const commentCopy = JSON.parse(JSON.stringify(comment))
+        commentCopy.likesInfo.myStatus = myLikeStatus
+        const like = await likeStatusRepository.getLastCountLikesByParentId(parentId)
+        const dislike = await likeStatusRepository.getLastCountDislikesByParentId(parentId)
+
+        const commentWithLikes = {...commentCopy, likesInfo: {...commentCopy.likesInfo, likesCount: like,  dislikesCount:dislike}}
+
+        return commentWithLikes
     },
 
 }
