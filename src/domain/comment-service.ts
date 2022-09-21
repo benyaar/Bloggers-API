@@ -15,7 +15,7 @@ export const commentService = {
             likesInfo: {
                 likesCount: 0,
                 dislikesCount: 0,
-                myStatus: 'none'
+                myStatus: 'None'
             }
         }
         return await commentRepository.createComment(newComment)
