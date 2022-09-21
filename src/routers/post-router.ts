@@ -85,7 +85,7 @@ postsRouter.post('/:postId/comments',authMiddlewareBearer, commentValidation, in
         }
     }
 )
-postsRouter.get('/:postId/comments', async (req: Request, res: Response) => {
+postsRouter.get('/:postId/comments', checkTokenMiddleware, async (req: Request, res: Response) => {
     const pageSize: number = Number(req.query.PageSize) || 10
     const pageNumber: number = Number(req.query.PageNumber) || 1
 
