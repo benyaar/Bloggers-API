@@ -4,32 +4,28 @@ import {CommentsType, PostsType} from "../repositories/db";
 import {likeStatusRepository} from "../repositories/likeStatus-repository";
 
 
-
-
 export const postsService = {
-    // async findPosts(pageSize:number, pageNumber:number) {
-    //     return await postsRepository.findPosts(pageSize, pageNumber )
-    // },
+
     async findPostById(id: string) {
         return await postsRepository.findPostById(id)
     },
     async createPost(id: string, title: string, shortDescription: string, content: string, bloggerId: string) {
-        const newPosts: PostsType = {
-            id: new ObjectId().toString(),
-            title: title,
-            shortDescription: shortDescription,
-            content: content,
-            bloggerId: bloggerId,
-            bloggerName: "Brendan Eich",
-            addedAt: new Date,
-            extendedLikesInfo: {
+        const newPost = new PostsType (
+            new ObjectId().toString(),
+            title,
+            shortDescription,
+            content,
+            bloggerId,
+            "Brendan Eich",
+            new Date,
+            {
                 likesCount: 0,
                 dislikesCount: 0,
                 myStatus: "None",
                 newestLikes: []
             }
-        }
-        return await postsRepository.createPost(newPosts)
+    )
+        return await postsRepository.createPost(newPost)
     },
     async updatePost(id: string, title: string, shortDescription: string, content: string, bloggerId: string) {
         return await postsRepository.updatePost(id, title, shortDescription, content, bloggerId)
@@ -61,9 +57,6 @@ export const postsService = {
         return await likeStatusRepository.createLikeStatus(parentId,status, id, login)
     },
 
-    async getCountBloggerId(bloggerId: string) {
-        return await postsRepository.getCountBloggerId(bloggerId)
-    },
 
     async findPostsWithLikes(pageSize:number, pageNumber:number, userId: string | undefined) {
         const posts =  await postsRepository.findPosts(pageSize, pageNumber)
@@ -86,8 +79,7 @@ export const postsService = {
 
         const post =  await postsRepository.findPostById(parentId)
         if (!post) return false
-        const postWithLikesInfo = await this.findLikesInfoForPost(parentId, userId, post)
-        return postWithLikesInfo
+        return await this.findLikesInfoForPost(parentId, userId, post)
     },
 
     async findLikesInfoForPost (parentId: string, userId: string | undefined, post: PostsType | CommentsType){
@@ -104,9 +96,14 @@ export const postsService = {
         const like = await likeStatusRepository.getLastCountLikesByParentId(parentId)
         const dislike = await likeStatusRepository.getLastCountDislikesByParentId(parentId)
 
-        const postWithLikes = {...postCopy, extendedLikesInfo: {...postCopy.extendedLikesInfo, likesCount: like,  dislikesCount:dislike, newestLikes: findLikeStatus}}
-
-        return postWithLikes
+        return {...postCopy,
+            extendedLikesInfo: {
+                ...postCopy.extendedLikesInfo,
+                likesCount: like,
+                dislikesCount: dislike,
+                newestLikes: findLikeStatus
+            }
+        }
     },
 
 

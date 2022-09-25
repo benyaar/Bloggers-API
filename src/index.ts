@@ -10,22 +10,15 @@ import {commentsRouter} from "./routers/comments-router";
 import {deleteAllRouter} from "./routers/deleteAll-router";
 import cookieParser from 'cookie-parser'
 
-
 const app = express()
 const port = process.env.PORT || 3000
-
-
 
 const parserMiddleware = bodyParser.json()
 app.use(parserMiddleware)
 app.use(cors())
-
 app.use(cookieParser())
-
 app.use('/bloggers', bloggersRouter)
-
 app.use('/posts', postsRouter)
-
 app.use('/users', usersRouter)
 app.use ('/auth', authRouter)
 app.use ('/comments', commentsRouter)
@@ -37,7 +30,6 @@ const  startApp = async () => {
     app.listen(port, () => {
         console.log(`Example app listening on port ${port}`)
     })
-
 }
 
 startApp()
