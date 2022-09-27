@@ -5,17 +5,17 @@ const options = {
     postId:0
 }
 
-export const postsRepository = {
+class PostsRepository {
     async findPosts(pageSize:number, pageNumber:number) {
         return  postsModal.find({}, options).skip((pageNumber-1)*pageSize).limit(pageSize)
-    },
+    }
     async findPostById(id: string) {
         return  postsModal.findOne({id: id}, options)
-    },
+    }
     async createPost(newPosts: PostsType) {
         await postsModal.insertMany(newPosts)
         return newPosts
-    },
+    }
     async updatePost(id: string, title: string, shortDescription: string, content: string, bloggerId: string) {
         const result = await postsModal.updateOne({id: id}, {
             $set: {
@@ -26,31 +26,20 @@ export const postsRepository = {
             }
         })
         return result.matchedCount === 1
-    },
+    }
     async deletePosts(id: string) {
 
         const result = await postsModal.deleteOne({id: id})
         return result.deletedCount === 1
-    },
+    }
     async getCount() {
         return  postsModal.count({})
-    },
+    }
     async findBloggersPost(pageSize:number, pageNumber:number, bloggerId: string){
         return  postsModal.find({bloggerId: bloggerId}, options).skip((pageNumber-1)*pageSize).limit(pageSize)
-    },
+    }
     async getCountBloggerId(bloggerId: string) {
         return  postsModal.count({bloggerId: bloggerId})
-    },
-    // async updateLikeStatus(postId: string, userId: string, login:string, likeStatus: string) {
-    //     const result = await postsModal.updateOne({id: postId}, {
-    //         $set: {
-    //             'extendedLikesInfo.newestLikes.0.addedAt': new Date(),
-    //             'extendedLikesInfo.newestLikes.0.userId': userId,
-    //             'extendedLikesInfo.newestLikes.0.login': login,
-    //             'extendedLikesInfo.myStatus': likeStatus
-    //         }
-    //     })
-    //     return result.matchedCount === 1
-    // },
-
+    }
 }
+export const postsRepository = new PostsRepository()

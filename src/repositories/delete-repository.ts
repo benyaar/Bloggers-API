@@ -1,6 +1,6 @@
 import {attemptsModal, bloggersModal, commentsModal, postsModal, usersModal} from "./db";
 
-export const deleteRepository = {
+class DeleteRepository{
 
     async deleteAll(){
        await bloggersModal.deleteMany({})
@@ -11,3 +11,4 @@ export const deleteRepository = {
         return true
     }
 }
+export const deleteRepository = new DeleteRepository()

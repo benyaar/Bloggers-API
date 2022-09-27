@@ -7,7 +7,7 @@ const defaultOptions = {
     status: 0,
 }
 
-export const likeStatusRepository = {
+class LikeStatusRepository {
     async createLikeStatus(parentId: string, status: string, id: string, login: string) {
         const newLikeStatus = new NewLikeStatus(
             parentId,
@@ -19,22 +19,22 @@ export const likeStatusRepository = {
         await newLikeStatusModal.findOneAndUpdate({parentId: parentId, userId: id}, {...newLikeStatus}, {upsert: true})
         return true
 
-    },
+    }
     async getLastCountLikesByParentId(parentId: string) {
         //const likes = await newLikeStatusModal.countDocuments({$and:[{parenId: parentId},{'likeStatus': 'Like'}]})
         return newLikeStatusModal.countDocuments({parentId: parentId, status: 'Like'})
-    },
+    }
 
     async getLastCountDislikesByParentId(parentId: string) {
         return  newLikeStatusModal.countDocuments({parentId: parentId, status: 'Dislike'})
-    },
+    }
 
     async getLastLikesByParentId(parentId: string, lastLikesCount: number) {
         return  newLikeStatusModal.find({
             parentId: parentId,
             status: 'Like'
         }, defaultOptions, {sort: {_id: -1}, limit: lastLikesCount})
-    },
+    }
 
     async getLastLikeStatusByParentAndUserId(parentId: string, userId: string) {
         return  newLikeStatusModal.findOne({parentId: parentId, userId: userId}, {
@@ -43,4 +43,4 @@ export const likeStatusRepository = {
         }).lean()
     }
 }
-
+export const likeStatusRepository = new LikeStatusRepository()

@@ -3,10 +3,14 @@ import {deleteService} from "../domain/delete-service";
 
 export const deleteAllRouter = Router({})
 
-deleteAllRouter.delete('/all-data',
-    async (req:Request, res:Response) =>{
-        await deleteService.deleteAll()
-        res.sendStatus(204)
+class DeleteAllController {
+    async deleteALl (req:Request, res:Response) {
+    await deleteService.deleteAll()
+    res.sendStatus(204)
 
 
-    })
+}
+}
+export const deleteAllInstance = new DeleteAllController()
+
+deleteAllRouter.delete('/all-data', deleteAllInstance.deleteALl)

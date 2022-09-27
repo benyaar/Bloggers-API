@@ -4,11 +4,11 @@ import {CommentsType, PostsType} from "../repositories/db";
 import {likeStatusRepository} from "../repositories/likeStatus-repository";
 
 
-export const postsService = {
+class PostsService {
 
     async findPostById(id: string) {
         return await postsRepository.findPostById(id)
-    },
+    }
     async createPost(id: string, title: string, shortDescription: string, content: string, bloggerId: string) {
         const newPost = new PostsType (
             new ObjectId().toString(),
@@ -26,16 +26,16 @@ export const postsService = {
             }
     )
         return await postsRepository.createPost(newPost)
-    },
+    }
     async updatePost(id: string, title: string, shortDescription: string, content: string, bloggerId: string) {
         return await postsRepository.updatePost(id, title, shortDescription, content, bloggerId)
-    },
+    }
     async deletePosts(id: string) {
         return await postsRepository.deletePosts(id)
-    },
+    }
     async getCount() {
         return await postsRepository.getCount()
-    },
+    }
     async findBloggersPostWithLikes(pageSize:number, pageNumber:number,bloggerId:string, userId: string | undefined) {
         const posts = await postsRepository.findBloggersPost(pageSize, pageNumber, bloggerId)
         let postsWithLikesInfo: PostsType[] = []
@@ -52,11 +52,10 @@ export const postsService = {
             "items": postsWithLikesInfo
         }
 
-    },
+    }
     async createLikeStatus(parentId:string,status:string, id:string, login:string){
         return await likeStatusRepository.createLikeStatus(parentId,status, id, login)
-    },
-
+    }
 
     async findPostsWithLikes(pageSize:number, pageNumber:number, userId: string | undefined) {
         const posts =  await postsRepository.findPosts(pageSize, pageNumber)
@@ -74,13 +73,13 @@ export const postsService = {
             "totalCount": count,
             "items": postsWithLikesInfo
         }
-    },
+    }
     async findPostByIdWithLikes (parentId: string, userId: string | undefined){
 
         const post =  await postsRepository.findPostById(parentId)
         if (!post) return false
         return await this.findLikesInfoForPost(parentId, userId, post)
-    },
+    }
 
     async findLikesInfoForPost (parentId: string, userId: string | undefined, post: PostsType | CommentsType){
         let myLikeStatus = 'None'
@@ -104,7 +103,8 @@ export const postsService = {
                 newestLikes: findLikeStatus
             }
         }
-    },
+    }
 
 
 }
+export const postsService = new PostsService()

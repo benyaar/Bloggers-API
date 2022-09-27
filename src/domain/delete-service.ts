@@ -1,8 +1,9 @@
 import {deleteRepository} from "../repositories/delete-repository";
 
 
-export const deleteService = {
+class DeleteService {
     async deleteAll () {
         return await deleteRepository.deleteAll()
     }
 }
+export const deleteService = new DeleteService()

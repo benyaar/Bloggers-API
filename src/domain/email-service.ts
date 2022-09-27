@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer"
 
-    export const emailService  = {
+   class EmailService  {
     async sendEmail(email: string, code: string) {
 
         let transport = nodemailer.createTransport({
@@ -19,7 +19,7 @@ import nodemailer from "nodemailer"
         });
         return
 
-    },
+    }
         async resendEmail(email: string, subject: string, message: string) {
             let transporter = nodemailer.createTransport({
                 service: "gmail",
@@ -38,3 +38,4 @@ import nodemailer from "nodemailer"
             return
         }
 }
+export const emailService  = new EmailService()

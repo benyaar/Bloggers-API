@@ -3,11 +3,11 @@ import {settings} from "../settings/settings";
 
 import {UsersDBType} from "../repositories/db";
 
-export const jwtService = {
+class JwtService {
     async createJWT(user:any){
         const token = jwt.sign({userId: user.id}, settings.JWT_SECRET, {expiresIn: '1h'} )
         return token
-    },
+    }
 
     async getUserIdByToken (token: string){
         try{
@@ -16,7 +16,7 @@ export const jwtService = {
         } catch (error) {
             return null
         }
-    },
+    }
     async createJWTPair (user:UsersDBType) {
         const accessToken = jwt.sign({userId: user.id},
                 settings.JWT_SECRET, {expiresIn: '1h'})
@@ -24,7 +24,7 @@ export const jwtService = {
                 settings.JWT_SECRET, {expiresIn: '2h'})
         const jwtTokenPair = {accessToken, refreshToken}
         return jwtTokenPair
-    },
+    }
     async getTokenTime(token: string){
         try{
             const result:any =  jwt.verify(token, settings.JWT_SECRET)
@@ -36,5 +36,6 @@ export const jwtService = {
         } catch (error) {
             return false
         }
-    },
+    }
 }
+export const jwtService  = new JwtService()

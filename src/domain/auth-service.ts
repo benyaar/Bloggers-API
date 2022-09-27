@@ -8,7 +8,7 @@ import {emailService} from "./email-service";
 
 
 
-export const authService = {
+class AuthService {
     async createUser (login: string,email:string, password: string){
 
         const passwordSalt = await bcrypt.genSalt(10)
@@ -33,16 +33,16 @@ export const authService = {
         await emailService.sendEmail(email, newUser.emailConfirmation.confirmationCode)
 
         return await authRepository.createUser(newUser)
-    },
+    }
     async _generateHash(password: string, salt: string){
         return await bcrypt.hash(password, salt)
-    },
+    }
     async checkExistEmail (email:string){
         return await authRepository.checkExistEmail(email)
-    },
+    }
     async checkExistLogin (login: string){
         return await authRepository.checkExistLogin(login)
-    },
+    }
     async confirmEmail (code:string) {
         const user = await authRepository.checkExistConfirmCode(code)
          if(!user) return false
@@ -56,7 +56,7 @@ export const authService = {
             return
         }
 
-    },
+    }
     async resendingEmailConfirm(email: string) {
         const user = await authService.checkExistEmail(email)
         if(user === null || !user ) return false
@@ -78,11 +78,12 @@ export const authService = {
         await authRepository.updateUnconfirmedEmailData(newEmailConfirmation)
         await emailService.sendEmail(email, newEmailConfirmation.emailConfirmation.confirmationCode)
         return
-    },
+    }
     async checkTokenInBlackList (refreshToken: string){
         return await authRepository.checkTokenInBlackList(refreshToken)
-    },
+    }
     async addTokenInBlackList (refreshToken: string){
         return await authRepository.addTokenInBlackList(refreshToken)
-    },
+    }
  }
+export const authService = new AuthService()
